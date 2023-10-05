@@ -40,6 +40,8 @@ When a visitor enters through the entry gate the IR sensor-1 detects the visitor
 
 ## Circuit
 
+The below shown is an assumed circuit not entirely accurate.
+
 ![Screenshot-2022-12-25-at-12 51 02-AM-800x485](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/316859d7-8cd1-4bbb-ae98-e8f450f13930)
 
 ## Block Diagram
