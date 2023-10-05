@@ -3,8 +3,27 @@
 This github repository summarizes the progress made in the ASIC class regarding the RISC-V project.
 
 ## Aim
-The aim of the project is to measure and display the number of persons entering in any room like seminar hall, conference room etc. LCD displays number ofpersons inside the room. We can use this project to count and display the number of visitors entering inside any conference room or seminar hall. This works in atwo way. That means counter will be incremented if person enters the room and will be decremented if a person leaves the room. This design is made utilising a specialized RISC-V processor.
+The aim of the project is to measure and display the number of persons entering in any room like seminar hall, conference room etc. LCD displays number ofpersons inside the room. We can use this project to count and display the number of visitors entering inside any conference room or seminar hall. This works in atwo way. That means counter will be incremented if person enters the room and will be decremented if a person leaves the room. This design is made utilising a specialized RISC-V 32_bit processor.
 
+## RISC-V 32 Bit Compiler Installation
+
+```
+sudo apt install libc6-dev
+git clone https://github.com/riscv/riscv-gnu-toolchain --recursive
+mkdir riscv32-toolchain
+cd riscv-gnu-toolchain
+./configure --prefix=/home/bhargav/riscv32-toolchain/ --with-arch=rv32i --with-abi=ilp32
+sudo apt-get install libgmp-dev
+make
+
+```
+**Path to access the riscv32-unknown-elf-gcc**
+
+```
+/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc
+```
+
+ 
 ## IR Sensor 
 The main element of this project is the IR Sensor which works as a Human Detector. Whenever the IR sensor detects an interrupt it counts the person and adds it to the previous value.
 
@@ -62,7 +81,7 @@ gcc automated_visitor_counter.c
 ```
 ![Screenshot from 2023-10-04 15-39-04](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fcff0780-420d-4625-b835-3292a59218e9)
 
-## C Code
+## C Program
 ```
 void readpinvalues(); 
 void delay(int);
