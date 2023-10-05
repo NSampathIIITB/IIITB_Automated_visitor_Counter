@@ -290,6 +290,7 @@ auipc
 - https://github.com/kunalg123/riscv_workshop_collaterals
 - https://github.com/SakethGajawada/RISCV-GNU
 - https://github.com/The-OpenROAD-Project/OpenSTA.git
+- https://github.com/bhargav-vlsi
 - https://how2electronics.com/bidirectional-visitor-counter-with-automatic-light-control-using-arduino 
 
 
