@@ -340,6 +340,7 @@ nop
 
 
 ```
+![Screenshot from 2023-10-09 18-35-31](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/66fb425f-0e0d-4ec4-9670-c6ffd7c3b306)
 
 ## Acknowledgement
 
