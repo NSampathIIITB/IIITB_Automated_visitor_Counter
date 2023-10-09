@@ -83,63 +83,134 @@ gcc automated_visitor_counter.c
 
 ## C Program
 ```
-void readpinvalues(); 
 void delay(int);
-
+void displaytotalpeople();
 int sensor_1 = 0;
 int sensor_2 = 0;
 int total_people = 0;
 
+// Define the pins for the LEDs
+//int ledpin_1 = 0; 
+//int ledpin_2 = 0; 
+
 int main()
 {
-     readpinvalues();
-     return 0;
-}     
+    while (1)
+    {
+        // Simulated digitalRead for sensor1  and sensor2(Assuming x30 contains sensor values)
+       
+            asm volatile(
+            "andi %0, x30, 0x01\n\t"
+            "andi %0, x30, 0x02\n\t"
+            : "=r"(sensor_1),"=r"(sensor_2)
+            :
+            );
 
-void readpinvalues() {
-    // Setup code
-    while (1) {
-        // Simulated digitalRead for sensor7
-        // Replace with actual code to read the state of sensor connected to pin 7
-        // Example: sensor7 = digitalRead(7);
-        asm(
-	"andi %0, x30, 0x01\n\t"
-	: "=r" (sensor_1));
-	
-	asm(
-	"andi %0, x30, 0x02\n\t"
-	: "=r" (sensor_2));
-
-        // Simulated digitalRead for sensor8
-        // Replace with actual code to read the state of sensor connected to pin 8
-        // Example: sensor8 = digitalRead(8);
-
-        if (sensor_1 == 0) {
-            while (sensor_2 == 1) {
+        if (sensor_1 == 0)
+        {
+            while (sensor_2 == 1)
+            {
                 // Wait for person to fully enter
-                // Replace with your code to check sensor8 state
-                asm(
-	            "andi %0, x30, 0x02\n\t"
-	            : "=r" (sensor_2));
+                // Replace with your code to check sensor2 state
+                asm volatile(
+            
+            "andi %0, x30, 0x02\n\t"
+            : "=r"(sensor_2)
+            :
+            );
+                
             }
 
-            // Person entered 
+            // Person entered
             total_people++;
             //show();
+            displaytotalpeople();
             delay(300); // Delay for 300 milliseconds
-             
-        } 
-              //printf("There are %d people in the room.\n", total);
-       
-    }
-
-  
-}
-void delay(int milliseconds) {
-    for (int i = 0; i < milliseconds; i++) {
-        for (int j = 0; j < 10000; j++) {
-            // Adjust the loop count based on your processsor's speed
         }
+       // else
+       // {
+            // You may want to add handling for when sensor_1 is not 0
+            // (e.g., if sensor_1 == 1)
+       // }
+    }
+    return 0;
+}
+
+void displaytotalpeople()
+{
+      int ledpin_1,ledpin_2,ledpin_1_reg,ledpin_2_reg;
+    // Display the total value using LEDs
+    // You can use digitalWrite or equivalent functions to control the LEDs
+    // For simplicity, let's assume HIGH turns the LED on and LOW turns it off
+
+    // Turn off both LEDs
+     ledpin_1 = 0; 
+     ledpin_2 = 0; 
+     ledpin_1_reg = ledpin_1*2;
+     ledpin_2_reg = ledpin_2*4;
+     
+     asm volatile(
+	"or x30, x30, %0\n\t"
+	"or x30, x30, %1\n\t"
+	: 
+	:"r"(ledpin_1_reg),"r"(ledpin_2_reg)
+	//:"r"(ledpin_2_reg)
+	:"x30"
+	);
+    // Display the total value using LEDs
+    if (total_people == 1)
+    {
+        // Turn on LED 1
+        ledpin_1 = 1;
+        ledpin_1 = ledpin_1_reg*2;
+            asm volatile(
+		"or x30, x30, %0\n\t" 
+		:
+		:"r"(ledpin_1_reg)
+		:"x30"
+		);
+    }
+    else if (total_people == 2)
+    {
+        // Turn on LED 2
+         ledpin_2 = 1;
+        ledpin_2 = ledpin_2_reg*2;
+            asm volatile(
+		"or x30, x30, %0\n\t" 
+		:
+		:"r"(ledpin_2_reg)
+		:"x30"
+		);
+    }
+    else if (total_people > 2)
+    {
+        // Turn on both LEDs (or use additional LEDs if needed)
+        ledpin_1 = 1; 
+        ledpin_2 = 1; 
+        ledpin_1_reg = ledpin_1*2;
+        ledpin_2_reg = ledpin_2*4;
+     
+        asm volatile(
+	    "or x30, x30, %0\n\t"
+	    "or x30, x30, %1\n\t" 
+	    :
+	    :"r"(ledpin_1_reg),"r"(ledpin_2_reg)
+	    :"x30"
+	    );
+    }
+}
+
+void delay(int milliseconds)
+{
+    for (int i = 0; i < milliseconds; i++)
+    {
+        for (int j = 0; j < 10000; j++)
+        {
+            // Adjust the loop count based on your processor's speed
+        }
+    }
+}
+
 
 ```
 
@@ -147,130 +218,165 @@ void delay(int milliseconds) {
 
 ### Assembly Code Generation
 ```
-/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc -c -mabi=ilp32 -march=rv32im -ffreestanding -o Automated_Visitor_Counter.o automated_visitor_counter.c
+/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc -mabi=ilp32 -march=rv32i -ffreestanding -nostdlib -o ./out automated_visitor_counter.c
 
+
+```
+/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-objdump -d -r out > automated_visitor_counter.txt
 ```
 
 ```
-/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-objdump -d automated_visitor_counter.o > acv.txt
 
 ```
-
-```
-automated_visitor_counter.o:     file format elf32-littleriscv
+out:     file format elf32-littleriscv
 
 
 Disassembly of section .text:
 
-00000000 <main>:
-   0:	ff010113          	add	sp,sp,-16
-   4:	00112623          	sw	ra,12(sp)
-   8:	00812423          	sw	s0,8(sp)
-   c:	01010413          	add	s0,sp,16
-  10:	00000097          	auipc	ra,0x0
-  14:	000080e7          	jalr	ra # 10 <main+0x10>
-  18:	00000793          	li	a5,0
-  1c:	00078513          	mv	a0,a5
-  20:	00c12083          	lw	ra,12(sp)
-  24:	00812403          	lw	s0,8(sp)
-  28:	01010113          	add	sp,sp,16
-  2c:	00008067          	ret
+00010094 <main>:
+   10094:	ff010113          	add	sp,sp,-16
+   10098:	00112623          	sw	ra,12(sp)
+   1009c:	00812423          	sw	s0,8(sp)
+   100a0:	01010413          	add	s0,sp,16
+   100a4:	001f7693          	and	a3,t5,1
+   100a8:	002f7693          	and	a3,t5,2
+   100ac:	000117b7          	lui	a5,0x11
+   100b0:	26d7a023          	sw	a3,608(a5) # 11260 <__DATA_BEGIN__>
+   100b4:	000117b7          	lui	a5,0x11
+   100b8:	26e7a223          	sw	a4,612(a5) # 11264 <sensor_2>
+   100bc:	002f7713          	and	a4,t5,2
+   100c0:	000117b7          	lui	a5,0x11
+   100c4:	26e7a223          	sw	a4,612(a5) # 11264 <sensor_2>
+   100c8:	000117b7          	lui	a5,0x11
+   100cc:	2607a783          	lw	a5,608(a5) # 11260 <__DATA_BEGIN__>
+   100d0:	fc079ae3          	bnez	a5,100a4 <main+0x10>
+   100d4:	0100006f          	j	100e4 <main+0x50>
+   100d8:	002f7713          	and	a4,t5,2
+   100dc:	000117b7          	lui	a5,0x11
+   100e0:	26e7a223          	sw	a4,612(a5) # 11264 <sensor_2>
+   100e4:	000117b7          	lui	a5,0x11
+   100e8:	2647a703          	lw	a4,612(a5) # 11264 <sensor_2>
+   100ec:	00100793          	li	a5,1
+   100f0:	fef704e3          	beq	a4,a5,100d8 <main+0x44>
+   100f4:	8081a783          	lw	a5,-2040(gp) # 11268 <total_people>
+   100f8:	00178713          	add	a4,a5,1
+   100fc:	80e1a423          	sw	a4,-2040(gp) # 11268 <total_people>
+   10100:	010000ef          	jal	10110 <displaytotalpeople>
+   10104:	12c00513          	li	a0,300
+   10108:	0f0000ef          	jal	101f8 <delay>
+   1010c:	f99ff06f          	j	100a4 <main+0x10>
 
-00000030 <readpinvalues>:
-  30:	ff010113          	add	sp,sp,-16
-  34:	00112623          	sw	ra,12(sp)
-  38:	00812423          	sw	s0,8(sp)
-  3c:	01010413          	add	s0,sp,16
+00010110 <displaytotalpeople>:
+   10110:	fe010113          	add	sp,sp,-32
+   10114:	00812e23          	sw	s0,28(sp)
+   10118:	02010413          	add	s0,sp,32
+   1011c:	fe042623          	sw	zero,-20(s0)
+   10120:	fe042423          	sw	zero,-24(s0)
+   10124:	fec42783          	lw	a5,-20(s0)
+   10128:	00179793          	sll	a5,a5,0x1
+   1012c:	fef42223          	sw	a5,-28(s0)
+   10130:	fe842783          	lw	a5,-24(s0)
+   10134:	00279793          	sll	a5,a5,0x2
+   10138:	fef42023          	sw	a5,-32(s0)
+   1013c:	fe442783          	lw	a5,-28(s0)
+   10140:	fe042703          	lw	a4,-32(s0)
+   10144:	00ff6f33          	or	t5,t5,a5
+   10148:	00ef6f33          	or	t5,t5,a4
+   1014c:	8081a703          	lw	a4,-2040(gp) # 11268 <total_people>
+   10150:	00100793          	li	a5,1
+   10154:	02f71263          	bne	a4,a5,10178 <displaytotalpeople+0x68>
+   10158:	00100793          	li	a5,1
+   1015c:	fef42623          	sw	a5,-20(s0)
+   10160:	fe442783          	lw	a5,-28(s0)
+   10164:	00179793          	sll	a5,a5,0x1
+   10168:	fef42623          	sw	a5,-20(s0)
+   1016c:	fe442783          	lw	a5,-28(s0)
+   10170:	00ff6f33          	or	t5,t5,a5
+   10174:	0740006f          	j	101e8 <displaytotalpeople+0xd8>
+   10178:	8081a703          	lw	a4,-2040(gp) # 11268 <total_people>
+   1017c:	00200793          	li	a5,2
+   10180:	02f71263          	bne	a4,a5,101a4 <displaytotalpeople+0x94>
+   10184:	00100793          	li	a5,1
+   10188:	fef42423          	sw	a5,-24(s0)
+   1018c:	fe042783          	lw	a5,-32(s0)
+   10190:	00179793          	sll	a5,a5,0x1
+   10194:	fef42423          	sw	a5,-24(s0)
+   10198:	fe042783          	lw	a5,-32(s0)
+   1019c:	00ff6f33          	or	t5,t5,a5
+   101a0:	0480006f          	j	101e8 <displaytotalpeople+0xd8>
+   101a4:	8081a703          	lw	a4,-2040(gp) # 11268 <total_people>
+   101a8:	00200793          	li	a5,2
+   101ac:	02e7de63          	bge	a5,a4,101e8 <displaytotalpeople+0xd8>
+   101b0:	00100793          	li	a5,1
+   101b4:	fef42623          	sw	a5,-20(s0)
+   101b8:	00100793          	li	a5,1
+   101bc:	fef42423          	sw	a5,-24(s0)
+   101c0:	fec42783          	lw	a5,-20(s0)
+   101c4:	00179793          	sll	a5,a5,0x1
+   101c8:	fef42223          	sw	a5,-28(s0)
+   101cc:	fe842783          	lw	a5,-24(s0)
+   101d0:	00279793          	sll	a5,a5,0x2
+   101d4:	fef42023          	sw	a5,-32(s0)
+   101d8:	fe442783          	lw	a5,-28(s0)
+   101dc:	fe042703          	lw	a4,-32(s0)
+   101e0:	00ff6f33          	or	t5,t5,a5
+   101e4:	00ef6f33          	or	t5,t5,a4
+   101e8:	00000013          	nop
+   101ec:	01c12403          	lw	s0,28(sp)
+   101f0:	02010113          	add	sp,sp,32
+   101f4:	00008067          	ret
 
-00000040 <.L7>:
-  40:	001f7713          	and	a4,t5,1
-  44:	000007b7          	lui	a5,0x0
-  48:	00e7a023          	sw	a4,0(a5) # 0 <main>
-  4c:	002f7713          	and	a4,t5,2
-  50:	000007b7          	lui	a5,0x0
-  54:	00e7a023          	sw	a4,0(a5) # 0 <main>
-  58:	000007b7          	lui	a5,0x0
-  5c:	0007a783          	lw	a5,0(a5) # 0 <main>
-  60:	fe0790e3          	bnez	a5,40 <.L7>
-  64:	0100006f          	j	74 <.L5>
-
-00000068 <.L6>:
-  68:	002f7713          	and	a4,t5,2
-  6c:	000007b7          	lui	a5,0x0
-  70:	00e7a023          	sw	a4,0(a5) # 0 <main>
-
-00000074 <.L5>:
-  74:	000007b7          	lui	a5,0x0
-  78:	0007a703          	lw	a4,0(a5) # 0 <main>
-  7c:	00100793          	li	a5,1
-  80:	fef704e3          	beq	a4,a5,68 <.L6>
-  84:	000007b7          	lui	a5,0x0
-  88:	0007a783          	lw	a5,0(a5) # 0 <main>
-  8c:	00178713          	add	a4,a5,1
-  90:	000007b7          	lui	a5,0x0
-  94:	00e7a023          	sw	a4,0(a5) # 0 <main>
-  98:	12c00513          	li	a0,300
-  9c:	00000097          	auipc	ra,0x0
-  a0:	000080e7          	jalr	ra # 9c <.L5+0x28>
-  a4:	f9dff06f          	j	40 <.L7>
-
-000000a8 <delay>:
-  a8:	fd010113          	add	sp,sp,-48
-  ac:	02812623          	sw	s0,44(sp)
-  b0:	03010413          	add	s0,sp,48
-  b4:	fca42e23          	sw	a0,-36(s0)
-  b8:	fe042623          	sw	zero,-20(s0)
-  bc:	0340006f          	j	f0 <.L9>
-
-000000c0 <.L12>:
-  c0:	fe042423          	sw	zero,-24(s0)
-  c4:	0100006f          	j	d4 <.L10>
-
-000000c8 <.L11>:
-  c8:	fe842783          	lw	a5,-24(s0)
-  cc:	00178793          	add	a5,a5,1
-  d0:	fef42423          	sw	a5,-24(s0)
-
-000000d4 <.L10>:
-  d4:	fe842703          	lw	a4,-24(s0)
-  d8:	000027b7          	lui	a5,0x2
-  dc:	70f78793          	add	a5,a5,1807 # 270f <.L9+0x261f>
-  e0:	fee7d4e3          	bge	a5,a4,c8 <.L11>
-  e4:	fec42783          	lw	a5,-20(s0)
-  e8:	00178793          	add	a5,a5,1
-  ec:	fef42623          	sw	a5,-20(s0)
-
-000000f0 <.L9>:
-  f0:	fec42703          	lw	a4,-20(s0)
-  f4:	fdc42783          	lw	a5,-36(s0)
-  f8:	fcf744e3          	blt	a4,a5,c0 <.L12>
-  fc:	00000013          	nop
- 100:	00000013          	nop
- 104:	02c12403          	lw	s0,44(sp)
- 108:	03010113          	add	sp,sp,48
- 10c:	00008067          	ret
+000101f8 <delay>:
+   101f8:	fd010113          	add	sp,sp,-48
+   101fc:	02812623          	sw	s0,44(sp)
+   10200:	03010413          	add	s0,sp,48
+   10204:	fca42e23          	sw	a0,-36(s0)
+   10208:	fe042623          	sw	zero,-20(s0)
+   1020c:	0340006f          	j	10240 <delay+0x48>
+   10210:	fe042423          	sw	zero,-24(s0)
+   10214:	0100006f          	j	10224 <delay+0x2c>
+   10218:	fe842783          	lw	a5,-24(s0)
+   1021c:	00178793          	add	a5,a5,1
+   10220:	fef42423          	sw	a5,-24(s0)
+   10224:	fe842703          	lw	a4,-24(s0)
+   10228:	000027b7          	lui	a5,0x2
+   1022c:	70f78793          	add	a5,a5,1807 # 270f <main-0xd985>
+   10230:	fee7d4e3          	bge	a5,a4,10218 <delay+0x20>
+   10234:	fec42783          	lw	a5,-20(s0)
+   10238:	00178793          	add	a5,a5,1
+   1023c:	fef42623          	sw	a5,-20(s0)
+   10240:	fec42703          	lw	a4,-20(s0)
+   10244:	fdc42783          	lw	a5,-36(s0)
+   10248:	fcf744e3          	blt	a4,a5,10210 <delay+0x18>
+   1024c:	00000013          	nop
+   10250:	00000013          	nop
+   10254:	02c12403          	lw	s0,44(sp)
+   10258:	03010113          	add	sp,sp,48
+   1025c:	00008067          	ret
 ```
 
 ## Specific Instructions
 ```
-Number of different instructions: 16
+Number of different instructions: 17
 List of unique instructions:
-ret
-jalr
-li
-j
-lw
-nop
-and
-mv
-bge
-lui
-blt
-beq
-sw
-add
 bnez
-auipc
+bne
+sll
+and
+j
+li
+add
+lui
+beq
+blt
+lw
+ret
+nop
+bge
+sw
+or
+jal
+
 ```
 
 ## Acknowledgement
