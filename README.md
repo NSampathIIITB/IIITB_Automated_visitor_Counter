@@ -174,12 +174,10 @@ void delay(int milliseconds) {
 
 ```
 /home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc -mabi=ilp32 -march=rv32i -ffreestanding -nostdlib -o ./out automated_visitor_counter.c
-
 ```
 
 ```
 /home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-objdump -d -r out > automated_visitor_counter.txt
-
 ```
 
 
