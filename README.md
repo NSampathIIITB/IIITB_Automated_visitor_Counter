@@ -65,7 +65,7 @@ The below shown is an assumed circuit not entirely accurate.
 
 ## Block Diagram
 
-![Screenshot from 2023-10-09 15-37-31](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/a5e9a99a-c6d7-4339-99a0-1014e52e67e9)
+![Screenshot from 2023-10-09 19-10-18](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/5ad037d4-4d7b-4bd4-8199-f1734d5dceae)
 
 ## Testing
 
