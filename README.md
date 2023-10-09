@@ -217,15 +217,16 @@ void delay(int milliseconds)
 ## Assembly Code
 
 ### Assembly Code Generation
+
 ```
 /home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc -mabi=ilp32 -march=rv32i -ffreestanding -nostdlib -o ./out automated_visitor_counter.c
 
+```
 
 ```
 /home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-objdump -d -r out > automated_visitor_counter.txt
 ```
 
-```
 
 ```
 out:     file format elf32-littleriscv
@@ -356,6 +357,7 @@ Disassembly of section .text:
 ```
 
 ## Specific Instructions
+
 ```
 Number of different instructions: 17
 List of unique instructions:
