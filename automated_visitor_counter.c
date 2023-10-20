@@ -1,12 +1,9 @@
-void displaytotalpeople();
-void delay(int);
-int sensor_1 = 0;
-int sensor_2 = 0;
-int total_people = 0;
-
-
 int main()
 {
+    int sensor_1 = 0;
+    int sensor_2 = 0;
+    int total_people = 0;
+    int ledpin[5],i,j,ledpin_reg[5];
     
     while (1) {
         // Simulated digitalRead for sensor1  and sensor2(Assuming x30 contains sensor values)
@@ -35,22 +32,13 @@ int main()
 
             // Person entered
             total_people++;
-            //show();
-            displaytotalpeople();
-            delay(300); // Delay for 300 milliseconds
-        }
-       
-    }
-    return 0;
-}
-
-void displaytotalpeople()
-{
-      int ledpin[5],i,j,ledpin_reg[5];
-      for(i=1; total_people > 0;i++)
+            if(total_people < 32)
+            {
+            for(i=1; total_people > 0;i++)
       {
       ledpin[i] = total_people % 2;
       total_people = total_people / 2;
+      }
       }
       ledpin_reg[1] = ledpin[1]*2;
       ledpin_reg[2] = ledpin[2]*4;
@@ -68,15 +56,19 @@ void displaytotalpeople()
 	:"r"(ledpin_reg[1]),"r"(ledpin_reg[2]),"r"(ledpin_reg[3]),"r"(ledpin_reg[4]),"r"(ledpin_reg[5])
 	:"x30"
 	);
-      
-}
-
-
-void delay(int milliseconds) {
-    for (int i = 0; i < milliseconds; i++) {
-        for (volatile int j = 0; j < 10000; j++) {
+            //show();
+            //displaytotalpeople();
+           // delay(300); // Delay for 300 milliseconds
+           
+           for (int i = 0; i < 300; i++) {
+        	for ( int j = 0; j < 10000; j++) {
             // Adjust the loop count based on your processor's speed
         }
     }
+           
+        }
+       
+    }
+    return 0;
 }
 
