@@ -301,28 +301,28 @@ Disassembly of section .text:
 ```
 Number of different instructions: 19
 List of unique instructions:
-andi
-or
-beq
-lui
-li
-lw
-bnez
-addi
-srai
 srli
+andi
+beq
+li
+slli
+addi
+lui
 sw
-bgtz
+j
+bnez
+lw
+bge
+sub
 mv
 add
-slli
 blt
-j
-sub
-bge
+bgtz
+srai
+or
 
 ```
-![Screenshot from 2023-10-21 11-20-38](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/aaa8a3d9-83f4-4888-b4b5-5cc542f70870)
+![Screenshot from 2023-10-21 12-14-30](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/1d7fe849-0654-42a8-bc6c-5de927d486ed)
 
 ## Acknowledgement
 
