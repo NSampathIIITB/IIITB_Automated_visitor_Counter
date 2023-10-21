@@ -164,8 +164,8 @@ int main()
             //displaytotalpeople();
            // delay(300); // Delay for 300 milliseconds
            
-           for (int i = 0; i < 300; i++) {
-        	for ( int j = 0; j < 10000; j++) {
+           for (int i = 0; i < 3000; i++) {
+        	for ( int j = 0; j < 1000000; j++) {
             // Adjust the loop count based on your processor's speed
         }
     }
@@ -281,16 +281,17 @@ Disassembly of section .text:
    10190:	00178793          	addi	a5,a5,1
    10194:	fcf42e23          	sw	a5,-36(s0)
    10198:	fdc42703          	lw	a4,-36(s0)
-   1019c:	000027b7          	lui	a5,0x2
-   101a0:	70f78793          	addi	a5,a5,1807 # 270f <main-0xd945>
+   1019c:	000f47b7          	lui	a5,0xf4
+   101a0:	23f78793          	addi	a5,a5,575 # f423f <__global_pointer$+0xe2877>
    101a4:	fee7d4e3          	bge	a5,a4,1018c <main+0x138>
    101a8:	fe042783          	lw	a5,-32(s0)
    101ac:	00178793          	addi	a5,a5,1
    101b0:	fef42023          	sw	a5,-32(s0)
    101b4:	fe042703          	lw	a4,-32(s0)
-   101b8:	12b00793          	li	a5,299
-   101bc:	fce7d4e3          	bge	a5,a4,10184 <main+0x130>
-   101c0:	eadff06f          	j	1006c <main+0x18>
+   101b8:	000017b7          	lui	a5,0x1
+   101bc:	bb778793          	addi	a5,a5,-1097 # bb7 <main-0xf49d>
+   101c0:	fce7d2e3          	bge	a5,a4,10184 <main+0x130>
+   101c4:	ea9ff06f          	j	1006c <main+0x18>
 
 
 ```
