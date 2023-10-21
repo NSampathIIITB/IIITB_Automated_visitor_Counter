@@ -32,7 +32,7 @@ sudo make install
 
 ```
 
-- To set the PATH variable in .bashrc
+ To set the PATH variable in .bashrc
 
 ```
 source .bashrc
