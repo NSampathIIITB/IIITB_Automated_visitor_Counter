@@ -60,8 +60,8 @@ int main()
             //displaytotalpeople();
            // delay(300); // Delay for 300 milliseconds
            
-           for (int i = 0; i < 300; i++) {
-        	for ( int j = 0; j < 10000; j++) {
+           for (int i = 0; i < 3000; i++) {
+        	for ( int j = 0; j < 1000000; j++) {
             // Adjust the loop count based on your processor's speed
         }
     }
