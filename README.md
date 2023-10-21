@@ -5,22 +5,42 @@ This github repository summarizes the progress made in the ASIC class regarding 
 ## Aim
 The aim of the project is to measure and display the number of persons entering in any room like seminar hall, conference room etc. LED's displays number of persons inside the room. We can use this project to count and display the number of visitors entering inside any conference room or seminar hall. we can make this works in two ways too. That means counter will be incremented if person enters the room and will be decremented if a person leaves the room. This design is made utilising a specialized RISC-V 32_bit processor.
 
-## RISC-V 32 Bit Compiler Installation
+## RISC-V 64 Bit Compiler Installation
+
+**Steps to install RISC-V toolchain**
 
 ```
-sudo apt install libc6-dev
-git clone https://github.com/riscv/riscv-gnu-toolchain --recursive
-mkdir riscv32-toolchain
-cd riscv-gnu-toolchain
-./configure --prefix=/home/bhargav/riscv32-toolchain/ --with-arch=rv32i --with-abi=ilp32
-sudo apt-get install libgmp-dev
+git clone https://github.com/kunalg123/riscv_workshop_collaterals.git
+cd riscv_workshop_collaterals
+chmod +x run.sh
+./run.sh
+
+```
+
+ Once you run it you will get **make** error. ignore it  and type the following commands
+
+ ```
+
+cd ~/riscv_toolchain/iverilog/
+git checkout --track -b v10-branch origin/v10-branch
+git pull 
+chmod 777 autoconf.sh 
+./autoconf.sh 
+./configure 
 make
+sudo make install
 
 ```
-**Path to access the riscv32-unknown-elf-gcc**
+
+- To set the PATH variable in .bashrc
 
 ```
-/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc
+source .bashrc
+gedit .bashrc
+#Instead of **nsaisampath** put your **username**
+export PATH="/home/nsaisampath/riscv_toolchain/riscv64-unknown-elf-gcc-8.3.0-2019.08.0-x86_64-linux-ubuntu14/bin:$PATH" #Type at last line # save and close the bashrc and type
+source .bashrc
+
 ```
 
  
@@ -164,11 +184,11 @@ int main()
 ### Assembly Code Generation
 
 ```
-/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-gcc -mabi=ilp32 -march=rv32i -ffreestanding -nostdlib -o ./out automated_visitor_counter.c
+riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -ffreestanding -nostdlib -o out automated_visitor_counter.c
 ```
 
 ```
-/home/nsaisampath/riscv32-toolchain/bin/riscv32-unknown-elf-objdump -d -r out > automated_visitor_counter.txt
+riscv64-unknown-elf-objdump -d -r out> automated_visitor_counter.txt
 ```
 
 
@@ -178,99 +198,99 @@ out:     file format elf32-littleriscv
 
 Disassembly of section .text:
 
-00010074 <main>:
-   10074:	fb010113          	add	sp,sp,-80
-   10078:	04812623          	sw	s0,76(sp)
-   1007c:	05010413          	add	s0,sp,80
-   10080:	fc042c23          	sw	zero,-40(s0)
-   10084:	fe042623          	sw	zero,-20(s0)
-   10088:	fe042423          	sw	zero,-24(s0)
-   1008c:	001f7713          	and	a4,t5,1
-   10090:	002f7713          	and	a4,t5,2
-   10094:	fce42c23          	sw	a4,-40(s0)
-   10098:	fef42623          	sw	a5,-20(s0)
-   1009c:	fd842783          	lw	a5,-40(s0)
-   100a0:	fe0796e3          	bnez	a5,1008c <main+0x18>
-   100a4:	00c0006f          	j	100b0 <main+0x3c>
-   100a8:	002f7793          	and	a5,t5,2
-   100ac:	fef42623          	sw	a5,-20(s0)
-   100b0:	fec42703          	lw	a4,-20(s0)
+00010054 <main>:
+   10054:	fb010113          	addi	sp,sp,-80
+   10058:	04812623          	sw	s0,76(sp)
+   1005c:	05010413          	addi	s0,sp,80
+   10060:	fc042c23          	sw	zero,-40(s0)
+   10064:	fe042623          	sw	zero,-20(s0)
+   10068:	fe042423          	sw	zero,-24(s0)
+   1006c:	001f7713          	andi	a4,t5,1
+   10070:	002f7713          	andi	a4,t5,2
+   10074:	fce42c23          	sw	a4,-40(s0)
+   10078:	fef42623          	sw	a5,-20(s0)
+   1007c:	fd842783          	lw	a5,-40(s0)
+   10080:	fe0796e3          	bnez	a5,1006c <main+0x18>
+   10084:	00c0006f          	j	10090 <main+0x3c>
+   10088:	002f7793          	andi	a5,t5,2
+   1008c:	fef42623          	sw	a5,-20(s0)
+   10090:	fec42703          	lw	a4,-20(s0)
+   10094:	00100793          	li	a5,1
+   10098:	fef708e3          	beq	a4,a5,10088 <main+0x34>
+   1009c:	fe842783          	lw	a5,-24(s0)
+   100a0:	00178793          	addi	a5,a5,1
+   100a4:	fef42423          	sw	a5,-24(s0)
+   100a8:	fe842703          	lw	a4,-24(s0)
+   100ac:	01f00793          	li	a5,31
+   100b0:	06e7c463          	blt	a5,a4,10118 <main+0xc4>
    100b4:	00100793          	li	a5,1
-   100b8:	fef708e3          	beq	a4,a5,100a8 <main+0x34>
-   100bc:	fe842783          	lw	a5,-24(s0)
-   100c0:	00178793          	add	a5,a5,1
-   100c4:	fef42423          	sw	a5,-24(s0)
-   100c8:	fe842703          	lw	a4,-24(s0)
-   100cc:	01f00793          	li	a5,31
-   100d0:	06e7c463          	blt	a5,a4,10138 <main+0xc4>
-   100d4:	00100793          	li	a5,1
-   100d8:	fef42223          	sw	a5,-28(s0)
-   100dc:	0540006f          	j	10130 <main+0xbc>
-   100e0:	fe842703          	lw	a4,-24(s0)
-   100e4:	41f75793          	sra	a5,a4,0x1f
-   100e8:	01f7d793          	srl	a5,a5,0x1f
-   100ec:	00f70733          	add	a4,a4,a5
-   100f0:	00177713          	and	a4,a4,1
-   100f4:	40f707b3          	sub	a5,a4,a5
-   100f8:	00078713          	mv	a4,a5
-   100fc:	fe442783          	lw	a5,-28(s0)
-   10100:	00279793          	sll	a5,a5,0x2
-   10104:	ff078793          	add	a5,a5,-16
-   10108:	008787b3          	add	a5,a5,s0
-   1010c:	fce7aa23          	sw	a4,-44(a5)
+   100b8:	fef42223          	sw	a5,-28(s0)
+   100bc:	0540006f          	j	10110 <main+0xbc>
+   100c0:	fe842703          	lw	a4,-24(s0)
+   100c4:	41f75793          	srai	a5,a4,0x1f
+   100c8:	01f7d793          	srli	a5,a5,0x1f
+   100cc:	00f70733          	add	a4,a4,a5
+   100d0:	00177713          	andi	a4,a4,1
+   100d4:	40f707b3          	sub	a5,a4,a5
+   100d8:	00078713          	mv	a4,a5
+   100dc:	fe442783          	lw	a5,-28(s0)
+   100e0:	00279793          	slli	a5,a5,0x2
+   100e4:	ff040693          	addi	a3,s0,-16
+   100e8:	00f687b3          	add	a5,a3,a5
+   100ec:	fce7aa23          	sw	a4,-44(a5)
+   100f0:	fe842783          	lw	a5,-24(s0)
+   100f4:	01f7d713          	srli	a4,a5,0x1f
+   100f8:	00f707b3          	add	a5,a4,a5
+   100fc:	4017d793          	srai	a5,a5,0x1
+   10100:	fef42423          	sw	a5,-24(s0)
+   10104:	fe442783          	lw	a5,-28(s0)
+   10108:	00178793          	addi	a5,a5,1
+   1010c:	fef42223          	sw	a5,-28(s0)
    10110:	fe842783          	lw	a5,-24(s0)
-   10114:	01f7d713          	srl	a4,a5,0x1f
-   10118:	00f707b3          	add	a5,a4,a5
-   1011c:	4017d793          	sra	a5,a5,0x1
-   10120:	fef42423          	sw	a5,-24(s0)
-   10124:	fe442783          	lw	a5,-28(s0)
-   10128:	00178793          	add	a5,a5,1
-   1012c:	fef42223          	sw	a5,-28(s0)
-   10130:	fe842783          	lw	a5,-24(s0)
-   10134:	faf046e3          	bgtz	a5,100e0 <main+0x6c>
-   10138:	fc842783          	lw	a5,-56(s0)
-   1013c:	00179793          	sll	a5,a5,0x1
-   10140:	faf42a23          	sw	a5,-76(s0)
-   10144:	fcc42783          	lw	a5,-52(s0)
-   10148:	00279793          	sll	a5,a5,0x2
-   1014c:	faf42c23          	sw	a5,-72(s0)
-   10150:	fd042783          	lw	a5,-48(s0)
-   10154:	00379793          	sll	a5,a5,0x3
-   10158:	faf42e23          	sw	a5,-68(s0)
-   1015c:	fd442783          	lw	a5,-44(s0)
-   10160:	00479793          	sll	a5,a5,0x4
-   10164:	fcf42023          	sw	a5,-64(s0)
-   10168:	fd842783          	lw	a5,-40(s0)
-   1016c:	00579793          	sll	a5,a5,0x5
-   10170:	fcf42223          	sw	a5,-60(s0)
-   10174:	fb442783          	lw	a5,-76(s0)
-   10178:	fb842703          	lw	a4,-72(s0)
-   1017c:	fbc42683          	lw	a3,-68(s0)
-   10180:	fc042603          	lw	a2,-64(s0)
-   10184:	fc442583          	lw	a1,-60(s0)
-   10188:	00ff6f33          	or	t5,t5,a5
-   1018c:	00ef6f33          	or	t5,t5,a4
-   10190:	00df6f33          	or	t5,t5,a3
-   10194:	00cf6f33          	or	t5,t5,a2
-   10198:	00bf6f33          	or	t5,t5,a1
-   1019c:	fe042023          	sw	zero,-32(s0)
-   101a0:	0340006f          	j	101d4 <main+0x160>
-   101a4:	fc042e23          	sw	zero,-36(s0)
-   101a8:	0100006f          	j	101b8 <main+0x144>
-   101ac:	fdc42783          	lw	a5,-36(s0)
-   101b0:	00178793          	add	a5,a5,1
-   101b4:	fcf42e23          	sw	a5,-36(s0)
-   101b8:	fdc42703          	lw	a4,-36(s0)
-   101bc:	000027b7          	lui	a5,0x2
-   101c0:	70f78793          	add	a5,a5,1807 # 270f <main-0xd965>
-   101c4:	fee7d4e3          	bge	a5,a4,101ac <main+0x138>
-   101c8:	fe042783          	lw	a5,-32(s0)
-   101cc:	00178793          	add	a5,a5,1
-   101d0:	fef42023          	sw	a5,-32(s0)
-   101d4:	fe042703          	lw	a4,-32(s0)
-   101d8:	12b00793          	li	a5,299
-   101dc:	fce7d4e3          	bge	a5,a4,101a4 <main+0x130>
-   101e0:	eadff06f          	j	1008c <main+0x18>
+   10114:	faf046e3          	bgtz	a5,100c0 <main+0x6c>
+   10118:	fc842783          	lw	a5,-56(s0)
+   1011c:	00179793          	slli	a5,a5,0x1
+   10120:	faf42a23          	sw	a5,-76(s0)
+   10124:	fcc42783          	lw	a5,-52(s0)
+   10128:	00279793          	slli	a5,a5,0x2
+   1012c:	faf42c23          	sw	a5,-72(s0)
+   10130:	fd042783          	lw	a5,-48(s0)
+   10134:	00379793          	slli	a5,a5,0x3
+   10138:	faf42e23          	sw	a5,-68(s0)
+   1013c:	fd442783          	lw	a5,-44(s0)
+   10140:	00479793          	slli	a5,a5,0x4
+   10144:	fcf42023          	sw	a5,-64(s0)
+   10148:	fd842783          	lw	a5,-40(s0)
+   1014c:	00579793          	slli	a5,a5,0x5
+   10150:	fcf42223          	sw	a5,-60(s0)
+   10154:	fb442783          	lw	a5,-76(s0)
+   10158:	fb842703          	lw	a4,-72(s0)
+   1015c:	fbc42683          	lw	a3,-68(s0)
+   10160:	fc042603          	lw	a2,-64(s0)
+   10164:	fc442583          	lw	a1,-60(s0)
+   10168:	00ff6f33          	or	t5,t5,a5
+   1016c:	00ef6f33          	or	t5,t5,a4
+   10170:	00df6f33          	or	t5,t5,a3
+   10174:	00cf6f33          	or	t5,t5,a2
+   10178:	00bf6f33          	or	t5,t5,a1
+   1017c:	fe042023          	sw	zero,-32(s0)
+   10180:	0340006f          	j	101b4 <main+0x160>
+   10184:	fc042e23          	sw	zero,-36(s0)
+   10188:	0100006f          	j	10198 <main+0x144>
+   1018c:	fdc42783          	lw	a5,-36(s0)
+   10190:	00178793          	addi	a5,a5,1
+   10194:	fcf42e23          	sw	a5,-36(s0)
+   10198:	fdc42703          	lw	a4,-36(s0)
+   1019c:	000027b7          	lui	a5,0x2
+   101a0:	70f78793          	addi	a5,a5,1807 # 270f <main-0xd945>
+   101a4:	fee7d4e3          	bge	a5,a4,1018c <main+0x138>
+   101a8:	fe042783          	lw	a5,-32(s0)
+   101ac:	00178793          	addi	a5,a5,1
+   101b0:	fef42023          	sw	a5,-32(s0)
+   101b4:	fe042703          	lw	a4,-32(s0)
+   101b8:	12b00793          	li	a5,299
+   101bc:	fce7d4e3          	bge	a5,a4,10184 <main+0x130>
+   101c0:	eadff06f          	j	1006c <main+0x18>
 
 
 ```
@@ -278,29 +298,30 @@ Disassembly of section .text:
 ## Specific Instructions
 
 ```
-Number of different instructions: 18
+Number of different instructions: 19
 List of unique instructions:
-mv
-sll
-lw
-bgtz
-bge
-j
-sw
+andi
 or
 beq
-bnez
-and
-blt
-sub
-add
-srl
 lui
 li
-sra
+lw
+bnez
+addi
+srai
+srli
+sw
+bgtz
+mv
+add
+slli
+blt
+j
+sub
+bge
 
 ```
-![Screenshot from 2023-10-20 21-55-25](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/4abfb47c-83dc-4b73-83b7-86cff83ac848)
+![Screenshot from 2023-10-21 11-20-38](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/aaa8a3d9-83f4-4888-b4b5-5cc542f70870)
 
 ## Acknowledgement
 
