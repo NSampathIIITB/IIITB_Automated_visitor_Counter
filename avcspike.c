@@ -1,5 +1,5 @@
-//#include <stdio.h>
-//#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 int main() {
     int total_people = 0;
@@ -18,22 +18,16 @@ int main() {
     ledreg4 = led4 * 32;
     ledreg5 = led5 * 64;
 
-    //for (z = 0; z < 10; z++) 
-    
-    while(1) {
+    for (z = 0; z < 10; z++) 
+    //while(1) 
+    {
        
-       // printf("Reading sensor values and showing total no of people\n");
+        printf("Reading sensor values and showing total no of people\n");
        
         // Simulated digitalRead for sensor1 and sensor2 (Assuming x30 contains sensor values)
-        //int sensor_1 = 0;
-        //int sensor_2 = 1;
-        asm volatile(
-            "andi %0, x30, 0x01\n\t"
-            : "=r"(sensor_1)
-            :
-            :
-        );
-
+        int sensor_1 = 0;
+        int sensor_2 = 1;
+        
         if (sensor_1 == 0) {
             while (sensor_2 == 1) 
            // if (sensor_2 == 1)
@@ -79,14 +73,14 @@ int main() {
                     : "x30"
                 );
 
-               /* printf("sensor_1 = %d, sensor_2 = %d, total_people = %d\n\n", sensor_1, sensor_2, total_people);
+                printf("sensor_1 = %d, sensor_2 = %d, total_people = %d\n\n", sensor_1, sensor_2, total_people);
                 printf("led's displaying binary value of total_people\n");
-                printf("%d,%d,%d,%d,%d\n\n",led5,led4,led3,led2,led1);*/
+                printf("%d,%d,%d,%d,%d\n\n",led5,led4,led3,led2,led1);
             }
 
             
                 // Add a delay here (replace with your delay logic)
-                for (int i = 0; i < 3000; i++) {
+                /*for (int i = 0; i < 3000; i++) {
                     for (int j = 0; j < 1000000; j++) {
                         // Adjust the loop count based on your processor's speed
                     }
@@ -97,4 +91,5 @@ int main() {
 
     return 0;
 }
+
 
