@@ -1,23 +1,20 @@
-Number of different instructions: 19
+Number of different instructions: 15
 List of unique instructions:
-srli
 andi
-beq
-li
-slli
-addi
-lui
-sw
-j
 bnez
-lw
-bge
-sub
-mv
-add
 blt
-bgtz
-srai
+lui
+li
 or
+sw
+srai
+j
+addi
+slli
+beq
+bge
+and
+lw
+
 
 
