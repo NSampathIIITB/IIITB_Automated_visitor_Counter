@@ -203,7 +203,7 @@ int main() {
 }
 
 ```
-## Spike simulation result for functionality verification
+## Spike Simulation Result For Functionality Verification
 
 I have done the spike simulatiion using *avcspike.c* which was mentioned above
 
