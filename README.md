@@ -98,86 +98,122 @@ The below shown is an assumed circuit not entirely accurate.
 gcc automated_visitor_counter.c
 ./a.out
 ```
-![Screenshot from 2023-10-04 15-39-04](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fcff0780-420d-4625-b835-3292a59218e9)
+![Screenshot from 2023-10-24 14-22-02](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c32649f3-137e-44e9-a825-3a50cbb51bed)
+## C Code
 
-## C Program
 ```
-int main()
-{
-    int sensor_1 = 0;
-    int sensor_2 = 0;
-    int total_people = 0;
-    int ledpin[5],i,j,ledpin_reg[5];
-    
-    while (1) {
-        // Simulated digitalRead for sensor1  and sensor2(Assuming x30 contains sensor values)
-       
-            asm volatile(
-            "andi %0, x30, 0x01\n\t"
-            "andi %0, x30, 0x02\n\t"
-            : "=r"(sensor_1),"=r"(sensor_2)
-            :
-            );
+//#include <stdio.h>
+//#include <stdlib.h>
 
-        if (sensor_1 == 0)
-        {
-            while (sensor_2 == 1)
-            {
-                // Wait for person to fully enter
-                // Replace with your code to check sensor2 state
-                asm volatile(
-            
-            "andi %0, x30, 0x02\n\t"
-            : "=r"(sensor_2)
+int main() {
+    int total_people = 0;
+    int led1 = 0;
+    int led2 = 0;
+    int led3 = 0;
+    int led4 = 0;
+    int led5 = 0;
+    int mask = 0xFFFFFF83;
+    int z;
+    int ledreg1, ledreg2, ledreg3, ledreg4, ledreg5;
+    int sensor_1,sensor_2;
+    ledreg1 = led1 * 4;
+    ledreg2 = led2 * 8;
+    ledreg3 = led3 * 16;
+    ledreg4 = led4 * 32;
+    ledreg5 = led5 * 64;
+
+    //for (z = 0; z < 10; z++) 
+    
+    while(1) {
+       
+       // printf("Reading sensor values and showing total no of people\n");
+       
+        // Simulated digitalRead for sensor1 and sensor2 (Assuming x30 contains sensor values)
+        //int sensor_1 = 0;
+        //int sensor_2 = 1;
+        asm volatile(
+            "andi %0, x30, 0x01\n\t"
+            : "=r"(sensor_1)
             :
-            );
+            :
+        );
+
+        if (sensor_1 == 0) {
+            while (sensor_2 == 1) 
+           // if (sensor_2 == 1)
+            {
+                // Wait for a person to fully enter
+                // Replace with your code to check sensor2 state
+                // This loop should actively monitor sensor_2
+                asm volatile(
+                    "andi %0, x30, 0x02\n\t"
+                    : "=r"(sensor_2)
+                    :
+                    :
+                );
                 
+               //people entered 
+                total_people++;
+
+            if (total_people < 32) {
+                // Control five LEDs based on individual bits of total_people
+                led1 = (total_people & 0x01) ? 1 : 0;
+                led2 = (total_people & 0x02) ? 1 : 0;
+                led3 = (total_people & 0x04) ? 1 : 0;
+                led4 = (total_people & 0x08) ? 1 : 0;
+                led5 = (total_people & 0x10) ? 1 : 0;
+
+                // Recalculate ledreg values
+                ledreg1 = led1 * 4;
+                ledreg2 = led2 * 8;
+                ledreg3 = led3 * 16;
+                ledreg4 = led4 * 32;
+                ledreg5 = led5 * 64;
+
+                // Update the mask and x30 register
+                asm volatile(
+                    "and x30, x30, %5\n\t"
+                    "or x30, x30, %0\n\t"
+                    "or x30, x30, %1\n\t"
+                    "or x30, x30, %2\n\t"
+                    "or x30, x30, %3\n\t"
+                    "or x30, x30, %4\n\t"
+                    :
+                    : "r"(ledreg1), "r"(ledreg2), "r"(ledreg3), "r"(ledreg4), "r"(ledreg5), "r"(mask)
+                    : "x30"
+                );
+
+               /* printf("sensor_1 = %d, sensor_2 = %d, total_people = %d\n\n", sensor_1, sensor_2, total_people);
+                printf("led's displaying binary value of total_people\n");
+                printf("%d,%d,%d,%d,%d\n\n",led5,led4,led3,led2,led1);*/
             }
 
-            // Person entered
-            total_people++;
-            if(total_people < 32)
-            {
-            for(i=1; total_people > 0;i++)
-      {
-      ledpin[i] = total_people % 2;
-      total_people = total_people / 2;
-      }
-      }
-      ledpin_reg[1] = ledpin[1]*2;
-      ledpin_reg[2] = ledpin[2]*4;
-      ledpin_reg[3] = ledpin[3]*8;
-      ledpin_reg[4] = ledpin[4]*16;
-      ledpin_reg[5] = ledpin[5]*32;
-      
-      asm volatile(
-	"or x30, x30, %0\n\t"
-	"or x30, x30, %1\n\t"
-	"or x30, x30, %2\n\t"
-	"or x30, x30, %3\n\t"
-	"or x30, x30, %4\n\t"
-	: 
-	:"r"(ledpin_reg[1]),"r"(ledpin_reg[2]),"r"(ledpin_reg[3]),"r"(ledpin_reg[4]),"r"(ledpin_reg[5])
-	:"x30"
-	);
-            //show();
-            //displaytotalpeople();
-           // delay(300); // Delay for 300 milliseconds
-           
-           for (int i = 0; i < 3000; i++) {
-        	for ( int j = 0; j < 1000000; j++) {
-            // Adjust the loop count based on your processor's speed
+            
+                // Add a delay here (replace with your delay logic)
+                for (int i = 0; i < 3000; i++) {
+                    for (int j = 0; j < 1000000; j++) {
+                        // Adjust the loop count based on your processor's speed
+                    }
+                }
+            }
         }
     }
-           
-        }
-       
-    }
+
     return 0;
 }
 
+```
+## Spike simulation result for functionality verification
+
+I have done the spike simulatiion using *avcspike.c* which was mentioned above
 
 ```
+riscv64-unknown-elf-gcc -march=rv64i -mabi=lp64 -ffreestanding -o out avcspike.c
+```
+```
+spike pk out
+```
+![Screenshot from 2023-10-24 23-39-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/4ce8623b-fc74-4743-979c-85866f63a793)
 
 ## Assembly Code
 
@@ -193,6 +229,7 @@ riscv64-unknown-elf-objdump -d -r out> automated_visitor_counter.txt
 
 
 ```
+
 out:     file format elf32-littleriscv
 
 
@@ -202,96 +239,110 @@ Disassembly of section .text:
    10054:	fb010113          	addi	sp,sp,-80
    10058:	04812623          	sw	s0,76(sp)
    1005c:	05010413          	addi	s0,sp,80
-   10060:	fc042c23          	sw	zero,-40(s0)
-   10064:	fe042623          	sw	zero,-20(s0)
-   10068:	fe042423          	sw	zero,-24(s0)
-   1006c:	001f7713          	andi	a4,t5,1
-   10070:	002f7713          	andi	a4,t5,2
-   10074:	fce42c23          	sw	a4,-40(s0)
-   10078:	fef42623          	sw	a5,-20(s0)
-   1007c:	fd842783          	lw	a5,-40(s0)
-   10080:	fe0796e3          	bnez	a5,1006c <main+0x18>
-   10084:	00c0006f          	j	10090 <main+0x3c>
-   10088:	002f7793          	andi	a5,t5,2
-   1008c:	fef42623          	sw	a5,-20(s0)
-   10090:	fec42703          	lw	a4,-20(s0)
-   10094:	00100793          	li	a5,1
-   10098:	fef708e3          	beq	a4,a5,10088 <main+0x34>
-   1009c:	fe842783          	lw	a5,-24(s0)
-   100a0:	00178793          	addi	a5,a5,1
-   100a4:	fef42423          	sw	a5,-24(s0)
-   100a8:	fe842703          	lw	a4,-24(s0)
-   100ac:	01f00793          	li	a5,31
-   100b0:	06e7c463          	blt	a5,a4,10118 <main+0xc4>
-   100b4:	00100793          	li	a5,1
-   100b8:	fef42223          	sw	a5,-28(s0)
-   100bc:	0540006f          	j	10110 <main+0xbc>
-   100c0:	fe842703          	lw	a4,-24(s0)
-   100c4:	41f75793          	srai	a5,a4,0x1f
-   100c8:	01f7d793          	srli	a5,a5,0x1f
-   100cc:	00f70733          	add	a4,a4,a5
-   100d0:	00177713          	andi	a4,a4,1
-   100d4:	40f707b3          	sub	a5,a4,a5
-   100d8:	00078713          	mv	a4,a5
-   100dc:	fe442783          	lw	a5,-28(s0)
-   100e0:	00279793          	slli	a5,a5,0x2
-   100e4:	ff040693          	addi	a3,s0,-16
-   100e8:	00f687b3          	add	a5,a3,a5
-   100ec:	fce7aa23          	sw	a4,-44(a5)
-   100f0:	fe842783          	lw	a5,-24(s0)
-   100f4:	01f7d713          	srli	a4,a5,0x1f
-   100f8:	00f707b3          	add	a5,a4,a5
-   100fc:	4017d793          	srai	a5,a5,0x1
-   10100:	fef42423          	sw	a5,-24(s0)
-   10104:	fe442783          	lw	a5,-28(s0)
-   10108:	00178793          	addi	a5,a5,1
-   1010c:	fef42223          	sw	a5,-28(s0)
-   10110:	fe842783          	lw	a5,-24(s0)
-   10114:	faf046e3          	bgtz	a5,100c0 <main+0x6c>
-   10118:	fc842783          	lw	a5,-56(s0)
-   1011c:	00179793          	slli	a5,a5,0x1
-   10120:	faf42a23          	sw	a5,-76(s0)
-   10124:	fcc42783          	lw	a5,-52(s0)
-   10128:	00279793          	slli	a5,a5,0x2
-   1012c:	faf42c23          	sw	a5,-72(s0)
-   10130:	fd042783          	lw	a5,-48(s0)
-   10134:	00379793          	slli	a5,a5,0x3
-   10138:	faf42e23          	sw	a5,-68(s0)
-   1013c:	fd442783          	lw	a5,-44(s0)
-   10140:	00479793          	slli	a5,a5,0x4
-   10144:	fcf42023          	sw	a5,-64(s0)
+   10060:	fe042623          	sw	zero,-20(s0)
+   10064:	fc042e23          	sw	zero,-36(s0)
+   10068:	fc042c23          	sw	zero,-40(s0)
+   1006c:	fc042a23          	sw	zero,-44(s0)
+   10070:	fc042823          	sw	zero,-48(s0)
+   10074:	fc042623          	sw	zero,-52(s0)
+   10078:	f8300793          	li	a5,-125
+   1007c:	fcf42423          	sw	a5,-56(s0)
+   10080:	fdc42783          	lw	a5,-36(s0)
+   10084:	00279793          	slli	a5,a5,0x2
+   10088:	fcf42223          	sw	a5,-60(s0)
+   1008c:	fd842783          	lw	a5,-40(s0)
+   10090:	00379793          	slli	a5,a5,0x3
+   10094:	fcf42023          	sw	a5,-64(s0)
+   10098:	fd442783          	lw	a5,-44(s0)
+   1009c:	00479793          	slli	a5,a5,0x4
+   100a0:	faf42e23          	sw	a5,-68(s0)
+   100a4:	fd042783          	lw	a5,-48(s0)
+   100a8:	00579793          	slli	a5,a5,0x5
+   100ac:	faf42c23          	sw	a5,-72(s0)
+   100b0:	fcc42783          	lw	a5,-52(s0)
+   100b4:	00679793          	slli	a5,a5,0x6
+   100b8:	faf42a23          	sw	a5,-76(s0)
+   100bc:	001f7793          	andi	a5,t5,1
+   100c0:	faf42823          	sw	a5,-80(s0)
+   100c4:	fb042783          	lw	a5,-80(s0)
+   100c8:	fe079ae3          	bnez	a5,100bc <main+0x68>
+   100cc:	1240006f          	j	101f0 <main+0x19c>
+   100d0:	002f7793          	andi	a5,t5,2
+   100d4:	fef42423          	sw	a5,-24(s0)
+   100d8:	fec42783          	lw	a5,-20(s0)
+   100dc:	00178793          	addi	a5,a5,1
+   100e0:	fef42623          	sw	a5,-20(s0)
+   100e4:	fec42703          	lw	a4,-20(s0)
+   100e8:	01f00793          	li	a5,31
+   100ec:	0ae7ce63          	blt	a5,a4,101a8 <main+0x154>
+   100f0:	fec42783          	lw	a5,-20(s0)
+   100f4:	0017f793          	andi	a5,a5,1
+   100f8:	fcf42e23          	sw	a5,-36(s0)
+   100fc:	fec42783          	lw	a5,-20(s0)
+   10100:	4017d793          	srai	a5,a5,0x1
+   10104:	0017f793          	andi	a5,a5,1
+   10108:	fcf42c23          	sw	a5,-40(s0)
+   1010c:	fec42783          	lw	a5,-20(s0)
+   10110:	4027d793          	srai	a5,a5,0x2
+   10114:	0017f793          	andi	a5,a5,1
+   10118:	fcf42a23          	sw	a5,-44(s0)
+   1011c:	fec42783          	lw	a5,-20(s0)
+   10120:	4037d793          	srai	a5,a5,0x3
+   10124:	0017f793          	andi	a5,a5,1
+   10128:	fcf42823          	sw	a5,-48(s0)
+   1012c:	fec42783          	lw	a5,-20(s0)
+   10130:	4047d793          	srai	a5,a5,0x4
+   10134:	0017f793          	andi	a5,a5,1
+   10138:	fcf42623          	sw	a5,-52(s0)
+   1013c:	fdc42783          	lw	a5,-36(s0)
+   10140:	00279793          	slli	a5,a5,0x2
+   10144:	fcf42223          	sw	a5,-60(s0)
    10148:	fd842783          	lw	a5,-40(s0)
-   1014c:	00579793          	slli	a5,a5,0x5
-   10150:	fcf42223          	sw	a5,-60(s0)
-   10154:	fb442783          	lw	a5,-76(s0)
-   10158:	fb842703          	lw	a4,-72(s0)
-   1015c:	fbc42683          	lw	a3,-68(s0)
-   10160:	fc042603          	lw	a2,-64(s0)
-   10164:	fc442583          	lw	a1,-60(s0)
-   10168:	00ff6f33          	or	t5,t5,a5
-   1016c:	00ef6f33          	or	t5,t5,a4
-   10170:	00df6f33          	or	t5,t5,a3
-   10174:	00cf6f33          	or	t5,t5,a2
-   10178:	00bf6f33          	or	t5,t5,a1
-   1017c:	fe042023          	sw	zero,-32(s0)
-   10180:	0340006f          	j	101b4 <main+0x160>
-   10184:	fc042e23          	sw	zero,-36(s0)
-   10188:	0100006f          	j	10198 <main+0x144>
-   1018c:	fdc42783          	lw	a5,-36(s0)
-   10190:	00178793          	addi	a5,a5,1
-   10194:	fcf42e23          	sw	a5,-36(s0)
-   10198:	fdc42703          	lw	a4,-36(s0)
-   1019c:	000f47b7          	lui	a5,0xf4
-   101a0:	23f78793          	addi	a5,a5,575 # f423f <__global_pointer$+0xe2877>
-   101a4:	fee7d4e3          	bge	a5,a4,1018c <main+0x138>
-   101a8:	fe042783          	lw	a5,-32(s0)
-   101ac:	00178793          	addi	a5,a5,1
-   101b0:	fef42023          	sw	a5,-32(s0)
-   101b4:	fe042703          	lw	a4,-32(s0)
-   101b8:	000017b7          	lui	a5,0x1
-   101bc:	bb778793          	addi	a5,a5,-1097 # bb7 <main-0xf49d>
-   101c0:	fce7d2e3          	bge	a5,a4,10184 <main+0x130>
-   101c4:	ea9ff06f          	j	1006c <main+0x18>
+   1014c:	00379793          	slli	a5,a5,0x3
+   10150:	fcf42023          	sw	a5,-64(s0)
+   10154:	fd442783          	lw	a5,-44(s0)
+   10158:	00479793          	slli	a5,a5,0x4
+   1015c:	faf42e23          	sw	a5,-68(s0)
+   10160:	fd042783          	lw	a5,-48(s0)
+   10164:	00579793          	slli	a5,a5,0x5
+   10168:	faf42c23          	sw	a5,-72(s0)
+   1016c:	fcc42783          	lw	a5,-52(s0)
+   10170:	00679793          	slli	a5,a5,0x6
+   10174:	faf42a23          	sw	a5,-76(s0)
+   10178:	fc442783          	lw	a5,-60(s0)
+   1017c:	fc042703          	lw	a4,-64(s0)
+   10180:	fbc42683          	lw	a3,-68(s0)
+   10184:	fb842603          	lw	a2,-72(s0)
+   10188:	fb442583          	lw	a1,-76(s0)
+   1018c:	fc842503          	lw	a0,-56(s0)
+   10190:	00af7f33          	and	t5,t5,a0
+   10194:	00ff6f33          	or	t5,t5,a5
+   10198:	00ef6f33          	or	t5,t5,a4
+   1019c:	00df6f33          	or	t5,t5,a3
+   101a0:	00cf6f33          	or	t5,t5,a2
+   101a4:	00bf6f33          	or	t5,t5,a1
+   101a8:	fe042223          	sw	zero,-28(s0)
+   101ac:	0340006f          	j	101e0 <main+0x18c>
+   101b0:	fe042023          	sw	zero,-32(s0)
+   101b4:	0100006f          	j	101c4 <main+0x170>
+   101b8:	fe042783          	lw	a5,-32(s0)
+   101bc:	00178793          	addi	a5,a5,1
+   101c0:	fef42023          	sw	a5,-32(s0)
+   101c4:	fe042703          	lw	a4,-32(s0)
+   101c8:	000f47b7          	lui	a5,0xf4
+   101cc:	23f78793          	addi	a5,a5,575 # f423f <__global_pointer$+0xe283f>
+   101d0:	fee7d4e3          	bge	a5,a4,101b8 <main+0x164>
+   101d4:	fe442783          	lw	a5,-28(s0)
+   101d8:	00178793          	addi	a5,a5,1
+   101dc:	fef42223          	sw	a5,-28(s0)
+   101e0:	fe442703          	lw	a4,-28(s0)
+   101e4:	000017b7          	lui	a5,0x1
+   101e8:	bb778793          	addi	a5,a5,-1097 # bb7 <main-0xf49d>
+   101ec:	fce7d2e3          	bge	a5,a4,101b0 <main+0x15c>
+   101f0:	fe842703          	lw	a4,-24(s0)
+   101f4:	00100793          	li	a5,1
+   101f8:	ecf70ce3          	beq	a4,a5,100d0 <main+0x7c>
+   101fc:	ec1ff06f          	j	100bc <main+0x68>
 
 
 ```
@@ -299,30 +350,26 @@ Disassembly of section .text:
 ## Specific Instructions
 
 ```
-Number of different instructions: 19
+Number of different instructions: 15
 List of unique instructions:
-srli
 andi
-beq
-li
-slli
-addi
-lui
-sw
-j
 bnez
-lw
-bge
-sub
-mv
-add
 blt
-bgtz
-srai
+lui
+li
 or
+sw
+srai
+j
+addi
+slli
+beq
+bge
+and
+lw
 
 ```
-![Screenshot from 2023-10-21 12-14-30](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/1d7fe849-0654-42a8-bc6c-5de927d486ed)
+![Screenshot from 2023-10-24 23-51-31](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/a27d2b08-f553-4631-8b50-21cf3fdf234e)
 
 ## Acknowledgement
 
@@ -330,6 +377,7 @@ or
 - Alwin shaju,Colleague,IIIT B
 - Kanish R,Colleague,IIIT B
 - Emil Jayanth Lal, Colleague, IIITB
+- Shant Rakshit, Colleague, IIITB
 - Mayank Kabra , IIIT B
 - skywater Foundry
 - chatgpt
