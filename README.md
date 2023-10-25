@@ -375,6 +375,7 @@ riscv64-unknown-elf-objdump -d -r out> automated_visitor_counter.txt
 
 
 ```
+
 out:     file format elf32-littleriscv
 
 
@@ -537,24 +538,25 @@ Disassembly of section .text:
 ```
 Number of different instructions: 15
 List of unique instructions:
-bge
-and
-or
-sw
-li
-andi
-slli
 blt
+andi
 beq
+addi
 j
-lw
 bnez
 lui
-addi
+lw
+li
 srai
+bge
+slli
+or
+and
+sw
+
 
 ```
-![Screenshot from 2023-10-25 16-15-40](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/1ecce641-2792-4949-8571-43a2f2348186)
+![Screenshot from 2023-10-25 16-30-01](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/af04d3a8-fee0-4b52-b7fd-41358aea71c3)
 
 ## Acknowledgement
 
