@@ -98,7 +98,9 @@ The below shown is an assumed circuit not entirely accurate.
 gcc automated_visitor_counter.c
 ./a.out
 ```
-![Screenshot from 2023-10-24 14-22-02](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c32649f3-137e-44e9-a825-3a50cbb51bed)
+
+![Screenshot from 2023-10-25 16-26-26](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/2b844fe0-a9b9-4752-8db0-01ba7a8db02d)
+
 ## C Code
 
 ```
