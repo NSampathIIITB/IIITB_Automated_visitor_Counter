@@ -209,10 +209,10 @@ int main() {
 
             
                 // Add a delay here (replace with your delay logic)
-                for (int i = 0; i < 3000; i++) {
-                    for (int j = 0; j < 100000; j++) {
+                for (int i = 0; i < 1; i++) 
+                {
                         // Adjust the loop count based on your processor's speed
-                    }
+                    
                 }
             }
         }
@@ -258,24 +258,24 @@ int main() {
     {
       //total_people=0; 
         printf("Reading sensor values and showing total no of people\n");
-        asm volatile(
+       /* asm volatile(
                     "andi %0, x30, 0x01\n\t"
                     : "=r"(sensor_1)
                     :
                     :
-                );
+                );*/
         // Simulated digitalRead for sensor1 and sensor2 (Assuming x30 contains sensor values)
          sensor_1 = 0;
         // sensor_2 = 1;
        
         if (sensor_1 == 0) {
            // while (sensor_2 == 1)
-           asm volatile(
+          /* asm volatile(
                     "andi %0, x30, 0x02\n\t"
                     : "=r"(sensor_2)
                     :
                     :
-                ); 
+                ); */
                 sensor_2 = 0;
            if (sensor_2 == 1)
              	total_people = total_people;//Here sensor_2=1 i.e the person is about to enter inside the room or just outside the room
@@ -305,7 +305,7 @@ int main() {
                 ledreg8 = led8 * 512;
                 
                 // Update the mask and x30 register
-                asm volatile(
+               /* asm volatile(
                     "and x30, x30, %8\n\t"
                     "or x30, x30, %0\n\t"
                     "or x30, x30, %1\n\t"
@@ -318,7 +318,7 @@ int main() {
                     :
                     : "r"(ledreg1), "r"(ledreg2), "r"(ledreg3), "r"(ledreg4), "r"(ledreg5),"r"(ledreg6),"r"(ledreg7),"r"(ledreg8), "r"(mask)
                     : "x30"
-                );
+                );*/
 
                 printf("sensor_1 = %d, sensor_2 = %d, total_people = %d\n\n", sensor_1, sensor_2, total_people);
                 printf("led's displaying binary value of total_people\n");
@@ -332,10 +332,8 @@ int main() {
 
             
                 // Add a delay here (replace with your delay logic)
-                /*for (int i = 0; i < 3000; i++) {
-                    for (int j = 0; j < 100000; j++) {
-                        // Adjust the loop count based on your processor's speed
-                    }
+                /*for (int i = 0; i < 1; i++) {
+                   // Adjust the loop count based on your processor's speed  
                 }*/
             }
         }
@@ -386,47 +384,47 @@ Disassembly of section .text:
    10058:	06812623          	sw	s0,108(sp)
    1005c:	07010413          	addi	s0,sp,112
    10060:	fe042623          	sw	zero,-20(s0)
-   10064:	fe042023          	sw	zero,-32(s0)
-   10068:	fc042e23          	sw	zero,-36(s0)
-   1006c:	fc042c23          	sw	zero,-40(s0)
-   10070:	fc042a23          	sw	zero,-44(s0)
-   10074:	fc042823          	sw	zero,-48(s0)
-   10078:	fc042623          	sw	zero,-52(s0)
-   1007c:	fc042423          	sw	zero,-56(s0)
-   10080:	fc042223          	sw	zero,-60(s0)
+   10064:	fe042223          	sw	zero,-28(s0)
+   10068:	fe042023          	sw	zero,-32(s0)
+   1006c:	fc042e23          	sw	zero,-36(s0)
+   10070:	fc042c23          	sw	zero,-40(s0)
+   10074:	fc042a23          	sw	zero,-44(s0)
+   10078:	fc042823          	sw	zero,-48(s0)
+   1007c:	fc042623          	sw	zero,-52(s0)
+   10080:	fc042423          	sw	zero,-56(s0)
    10084:	c0300793          	li	a5,-1021
-   10088:	fcf42023          	sw	a5,-64(s0)
-   1008c:	fe042783          	lw	a5,-32(s0)
+   10088:	fcf42223          	sw	a5,-60(s0)
+   1008c:	fe442783          	lw	a5,-28(s0)
    10090:	00279793          	slli	a5,a5,0x2
-   10094:	faf42e23          	sw	a5,-68(s0)
-   10098:	fdc42783          	lw	a5,-36(s0)
+   10094:	fcf42023          	sw	a5,-64(s0)
+   10098:	fe042783          	lw	a5,-32(s0)
    1009c:	00379793          	slli	a5,a5,0x3
-   100a0:	faf42c23          	sw	a5,-72(s0)
-   100a4:	fd842783          	lw	a5,-40(s0)
+   100a0:	faf42e23          	sw	a5,-68(s0)
+   100a4:	fdc42783          	lw	a5,-36(s0)
    100a8:	00479793          	slli	a5,a5,0x4
-   100ac:	faf42a23          	sw	a5,-76(s0)
-   100b0:	fd442783          	lw	a5,-44(s0)
+   100ac:	faf42c23          	sw	a5,-72(s0)
+   100b0:	fd842783          	lw	a5,-40(s0)
    100b4:	00579793          	slli	a5,a5,0x5
-   100b8:	faf42823          	sw	a5,-80(s0)
-   100bc:	fd042783          	lw	a5,-48(s0)
+   100b8:	faf42a23          	sw	a5,-76(s0)
+   100bc:	fd442783          	lw	a5,-44(s0)
    100c0:	00679793          	slli	a5,a5,0x6
-   100c4:	faf42623          	sw	a5,-84(s0)
-   100c8:	fcc42783          	lw	a5,-52(s0)
+   100c4:	faf42823          	sw	a5,-80(s0)
+   100c8:	fd042783          	lw	a5,-48(s0)
    100cc:	00779793          	slli	a5,a5,0x7
-   100d0:	faf42423          	sw	a5,-88(s0)
-   100d4:	fc842783          	lw	a5,-56(s0)
+   100d0:	faf42623          	sw	a5,-84(s0)
+   100d4:	fcc42783          	lw	a5,-52(s0)
    100d8:	00879793          	slli	a5,a5,0x8
-   100dc:	faf42223          	sw	a5,-92(s0)
-   100e0:	fc442783          	lw	a5,-60(s0)
+   100dc:	faf42423          	sw	a5,-88(s0)
+   100e0:	fc842783          	lw	a5,-56(s0)
    100e4:	00979793          	slli	a5,a5,0x9
-   100e8:	faf42023          	sw	a5,-96(s0)
+   100e8:	faf42223          	sw	a5,-92(s0)
    100ec:	001f7793          	andi	a5,t5,1
-   100f0:	f8f42e23          	sw	a5,-100(s0)
-   100f4:	f9c42783          	lw	a5,-100(s0)
+   100f0:	faf42023          	sw	a5,-96(s0)
+   100f4:	fa042783          	lw	a5,-96(s0)
    100f8:	fe079ae3          	bnez	a5,100ec <main+0x98>
    100fc:	002f7793          	andi	a5,t5,2
-   10100:	f8f42c23          	sw	a5,-104(s0)
-   10104:	f9842703          	lw	a4,-104(s0)
+   10100:	f8f42e23          	sw	a5,-100(s0)
+   10104:	f9c42703          	lw	a4,-100(s0)
    10108:	00100793          	li	a5,1
    1010c:	00f70863          	beq	a4,a5,1011c <main+0xc8>
    10110:	fec42783          	lw	a5,-20(s0)
@@ -437,68 +435,68 @@ Disassembly of section .text:
    10124:	12e7c663          	blt	a5,a4,10250 <main+0x1fc>
    10128:	fec42783          	lw	a5,-20(s0)
    1012c:	0017f793          	andi	a5,a5,1
-   10130:	fef42023          	sw	a5,-32(s0)
+   10130:	fef42223          	sw	a5,-28(s0)
    10134:	fec42783          	lw	a5,-20(s0)
    10138:	4017d793          	srai	a5,a5,0x1
    1013c:	0017f793          	andi	a5,a5,1
-   10140:	fcf42e23          	sw	a5,-36(s0)
+   10140:	fef42023          	sw	a5,-32(s0)
    10144:	fec42783          	lw	a5,-20(s0)
    10148:	4027d793          	srai	a5,a5,0x2
    1014c:	0017f793          	andi	a5,a5,1
-   10150:	fcf42c23          	sw	a5,-40(s0)
+   10150:	fcf42e23          	sw	a5,-36(s0)
    10154:	fec42783          	lw	a5,-20(s0)
    10158:	4037d793          	srai	a5,a5,0x3
    1015c:	0017f793          	andi	a5,a5,1
-   10160:	fcf42a23          	sw	a5,-44(s0)
+   10160:	fcf42c23          	sw	a5,-40(s0)
    10164:	fec42783          	lw	a5,-20(s0)
    10168:	4047d793          	srai	a5,a5,0x4
    1016c:	0017f793          	andi	a5,a5,1
-   10170:	fcf42823          	sw	a5,-48(s0)
+   10170:	fcf42a23          	sw	a5,-44(s0)
    10174:	fec42783          	lw	a5,-20(s0)
    10178:	4057d793          	srai	a5,a5,0x5
    1017c:	0017f793          	andi	a5,a5,1
-   10180:	fcf42623          	sw	a5,-52(s0)
+   10180:	fcf42823          	sw	a5,-48(s0)
    10184:	fec42783          	lw	a5,-20(s0)
    10188:	4067d793          	srai	a5,a5,0x6
    1018c:	0017f793          	andi	a5,a5,1
-   10190:	fcf42423          	sw	a5,-56(s0)
+   10190:	fcf42623          	sw	a5,-52(s0)
    10194:	fec42783          	lw	a5,-20(s0)
    10198:	4077d793          	srai	a5,a5,0x7
    1019c:	0017f793          	andi	a5,a5,1
-   101a0:	fcf42223          	sw	a5,-60(s0)
-   101a4:	fe042783          	lw	a5,-32(s0)
+   101a0:	fcf42423          	sw	a5,-56(s0)
+   101a4:	fe442783          	lw	a5,-28(s0)
    101a8:	00279793          	slli	a5,a5,0x2
-   101ac:	faf42e23          	sw	a5,-68(s0)
-   101b0:	fdc42783          	lw	a5,-36(s0)
+   101ac:	fcf42023          	sw	a5,-64(s0)
+   101b0:	fe042783          	lw	a5,-32(s0)
    101b4:	00379793          	slli	a5,a5,0x3
-   101b8:	faf42c23          	sw	a5,-72(s0)
-   101bc:	fd842783          	lw	a5,-40(s0)
+   101b8:	faf42e23          	sw	a5,-68(s0)
+   101bc:	fdc42783          	lw	a5,-36(s0)
    101c0:	00479793          	slli	a5,a5,0x4
-   101c4:	faf42a23          	sw	a5,-76(s0)
-   101c8:	fd442783          	lw	a5,-44(s0)
+   101c4:	faf42c23          	sw	a5,-72(s0)
+   101c8:	fd842783          	lw	a5,-40(s0)
    101cc:	00579793          	slli	a5,a5,0x5
-   101d0:	faf42823          	sw	a5,-80(s0)
-   101d4:	fd042783          	lw	a5,-48(s0)
+   101d0:	faf42a23          	sw	a5,-76(s0)
+   101d4:	fd442783          	lw	a5,-44(s0)
    101d8:	00679793          	slli	a5,a5,0x6
-   101dc:	faf42623          	sw	a5,-84(s0)
-   101e0:	fcc42783          	lw	a5,-52(s0)
+   101dc:	faf42823          	sw	a5,-80(s0)
+   101e0:	fd042783          	lw	a5,-48(s0)
    101e4:	00779793          	slli	a5,a5,0x7
-   101e8:	faf42423          	sw	a5,-88(s0)
-   101ec:	fc842783          	lw	a5,-56(s0)
+   101e8:	faf42623          	sw	a5,-84(s0)
+   101ec:	fcc42783          	lw	a5,-52(s0)
    101f0:	00879793          	slli	a5,a5,0x8
-   101f4:	faf42223          	sw	a5,-92(s0)
-   101f8:	fc442783          	lw	a5,-60(s0)
+   101f4:	faf42423          	sw	a5,-88(s0)
+   101f8:	fc842783          	lw	a5,-56(s0)
    101fc:	00979793          	slli	a5,a5,0x9
-   10200:	faf42023          	sw	a5,-96(s0)
-   10204:	fbc42783          	lw	a5,-68(s0)
-   10208:	fb842703          	lw	a4,-72(s0)
-   1020c:	fb442683          	lw	a3,-76(s0)
-   10210:	fb042603          	lw	a2,-80(s0)
-   10214:	fac42583          	lw	a1,-84(s0)
-   10218:	fa842503          	lw	a0,-88(s0)
-   1021c:	fa442803          	lw	a6,-92(s0)
-   10220:	fa042883          	lw	a7,-96(s0)
-   10224:	fc042303          	lw	t1,-64(s0)
+   10200:	faf42223          	sw	a5,-92(s0)
+   10204:	fc042783          	lw	a5,-64(s0)
+   10208:	fbc42703          	lw	a4,-68(s0)
+   1020c:	fb842683          	lw	a3,-72(s0)
+   10210:	fb442603          	lw	a2,-76(s0)
+   10214:	fb042583          	lw	a1,-80(s0)
+   10218:	fac42503          	lw	a0,-84(s0)
+   1021c:	fa842803          	lw	a6,-88(s0)
+   10220:	fa442883          	lw	a7,-92(s0)
+   10224:	fc442303          	lw	t1,-60(s0)
    10228:	006f7f33          	and	t5,t5,t1
    1022c:	00ff6f33          	or	t5,t5,a5
    10230:	00ef6f33          	or	t5,t5,a4
@@ -511,24 +509,15 @@ Disassembly of section .text:
    1024c:	0080006f          	j	10254 <main+0x200>
    10250:	fe042623          	sw	zero,-20(s0)
    10254:	fe042423          	sw	zero,-24(s0)
-   10258:	0340006f          	j	1028c <main+0x238>
-   1025c:	fe042223          	sw	zero,-28(s0)
-   10260:	0100006f          	j	10270 <main+0x21c>
-   10264:	fe442783          	lw	a5,-28(s0)
-   10268:	00178793          	addi	a5,a5,1
-   1026c:	fef42223          	sw	a5,-28(s0)
-   10270:	fe442703          	lw	a4,-28(s0)
-   10274:	000187b7          	lui	a5,0x18
-   10278:	69f78793          	addi	a5,a5,1695 # 1869f <__global_pointer$+0x6bff>
-   1027c:	fee7d4e3          	bge	a5,a4,10264 <main+0x210>
-   10280:	fe842783          	lw	a5,-24(s0)
-   10284:	00178793          	addi	a5,a5,1
-   10288:	fef42423          	sw	a5,-24(s0)
-   1028c:	fe842703          	lw	a4,-24(s0)
-   10290:	000017b7          	lui	a5,0x1
-   10294:	bb778793          	addi	a5,a5,-1097 # bb7 <main-0xf49d>
-   10298:	fce7d2e3          	bge	a5,a4,1025c <main+0x208>
-   1029c:	e51ff06f          	j	100ec <main+0x98>
+   10258:	0100006f          	j	10268 <main+0x214>
+   1025c:	fe842783          	lw	a5,-24(s0)
+   10260:	00178793          	addi	a5,a5,1
+   10264:	fef42423          	sw	a5,-24(s0)
+   10268:	fe842703          	lw	a4,-24(s0)
+   1026c:	06300793          	li	a5,99
+   10270:	fee7d6e3          	bge	a5,a4,1025c <main+0x208>
+   10274:	e79ff06f          	j	100ec <main+0x98>
+
 
 
 ```
@@ -536,27 +525,25 @@ Disassembly of section .text:
 ## Specific Instructions
 
 ```
-Number of different instructions: 15
+Number of different instructions: 14
 List of unique instructions:
-blt
-andi
 beq
-addi
-j
-bnez
-lui
-lw
-li
 srai
-bge
-slli
 or
-and
+lw
 sw
-
+addi
+andi
+bnez
+blt
+j
+bge
+and
+li
+slli
 
 ```
-![Screenshot from 2023-10-25 16-30-01](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/af04d3a8-fee0-4b52-b7fd-41358aea71c3)
+![Screenshot from 2023-10-25 17-00-35](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/7b356cdc-bb9c-45cd-83fc-827f3cd29ea2)
 
 ## Acknowledgement
 
