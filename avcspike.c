@@ -98,7 +98,7 @@ int main() {
             else
             {
             	printf("Limit Reached for 256 \n");
-            	break;
+            	total_people = 0;
             }
 
             
