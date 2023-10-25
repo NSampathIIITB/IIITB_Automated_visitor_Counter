@@ -256,7 +256,7 @@ int main() {
                     :
                 );
                 
-               //people entered 
+               //people entered
                 total_people++;
 
             if (total_people < 32) {
