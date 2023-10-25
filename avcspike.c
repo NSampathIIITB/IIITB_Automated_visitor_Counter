@@ -55,7 +55,7 @@ int main() {
 
             if (total_people < 256) 
             {
-                // Control five LEDs based on individual bits of total_people
+                // Control 8 LEDs based on individual bits of total_people
                 led1 = (total_people & 0x01) ? 1 : 0;
                 led2 = (total_people & 0x02) ? 1 : 0;
                 led3 = (total_people & 0x04) ? 1 : 0;
