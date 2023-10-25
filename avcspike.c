@@ -18,16 +18,20 @@ int main() {
     ledreg4 = led4 * 32;
     ledreg5 = led5 * 64;
 
-    for (z = 0; z < 10; z++) 
-    //while(1) 
+    for (z = 0; z < 31; z++)  
     {
        
         printf("Reading sensor values and showing total no of people\n");
-       
+        asm volatile(
+                    "andi %0, x30, 0x01\n\t"
+                    : "=r"(sensor_1)
+                    :
+                    :
+                );
         // Simulated digitalRead for sensor1 and sensor2 (Assuming x30 contains sensor values)
         int sensor_1 = 0;
         int sensor_2 = 1;
-        
+       
         if (sensor_1 == 0) {
             while (sensor_2 == 1) 
            // if (sensor_2 == 1)
@@ -91,5 +95,3 @@ int main() {
 
     return 0;
 }
-
-
