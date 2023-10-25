@@ -103,10 +103,9 @@ int main() {
 
             
                 // Add a delay here (replace with your delay logic)
-                for (int i = 0; i < 3000; i++) {
-                    for (int j = 0; j < 100000; j++) {
-                        // Adjust the loop count based on your processor's speed
-                    }
+                for (int i = 0; i < 100; i++) {
+                    
+                        // Adjust the loop count based on your processor's speed   
                 }
             }
         }
