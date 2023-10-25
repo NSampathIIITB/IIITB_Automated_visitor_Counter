@@ -215,6 +215,8 @@ spike pk out
 ```
 ![Screenshot from 2023-10-24 23-39-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/4ce8623b-fc74-4743-979c-85866f63a793)
 
+Here after when sensor_1=0  detects the person, we are checking the detection of person at sensor_2 ,when the sensor_2=1 it means the person is about to enter the room and the total_people value gets incremented and we will observe the sensor2=0 when the person completely enters inside the room and we will get the binary value of total_people value in LED's.
+
 ## Assembly Code
 
 ### Assembly Code Generation
