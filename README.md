@@ -42,7 +42,9 @@ export PATH="/home/nsaisampath/riscv_toolchain/riscv64-unknown-elf-gcc-8.3.0-201
 source .bashrc
 
 ```
+## Instruction set of RISC-V RV32I
 
+![image](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/86102c52-f600-4ea5-a11f-38b69d5cf254)
  
 ## IR Sensor 
 The main element of this project is the IR Sensor which works as a Human Detector. Whenever the IR sensor detects an interrupt it counts the person and adds it to the previous value.
@@ -222,7 +224,7 @@ int main() {
 
 
 ```
-## Spike Simulation Result For Functionality Verification
+## Spike Simulation Results For Functionality Verification
 
 I have done the spike simulatiion using *avcspike.c* which was mentioned below.
 
@@ -544,6 +546,73 @@ slli
 
 ```
 ![Screenshot from 2023-10-25 17-00-35](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/7b356cdc-bb9c-45cd-83fc-827f3cd29ea2)
+
+
+## Functionality verification using GTKWave Simulations
+
+After generating the core we have to verify the functionality of the core using GTKWave simulations.Necessary modifications has been made in the processor.v and testbench.v according to our functionality.
+
+```
+iverilog -o test processor.v testbench.v
+.\test
+gtkwave waveform.vcd
+```
+#### Case-1
+
+    when the input is given as 2'b01 i.e sensor_1 = 0 (person is detected at sensor_1 while entering) and sensor_2 = 1 (person is not detected at sensor_2 while entering) the output value is zero which means the binary value of total people in the room displayed by the LED's is zero.In case there are some people intially inside the room the value of the total people remains constant for the given set of inputs .
+    
+![Screenshot from 2023-10-27 21-03-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/921d8116-763b-427c-a9a0-f8854d926b64)
+
+#### Case-2
+
+    when the input is given as 2'b00 i.e sensor_1 = 0 (person is detected at sensor_1 while entering) and sensor_2 = 0 (person is detected at sensor_2 while entering) the output value i.e the total people value gets incremented when the people are entering one after the other and the binary value of the total people is displayed by the LED's ,when the total people inside the room reaches 255 the output(counter) starts to increment from zero again i.e the people inside the room are counted in sets of 255. 
+
+![Screenshot from 2023-10-27 21-10-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/51b01916-8939-4a3e-bad1-8f68b13da481)
+![Screenshot from 2023-10-27 21-11-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fd3972ab-4211-4dc9-bca0-2b0a6f7de396)
+
+## Instruction Verification
+
+The execution of some of the above instructions in above assembly code were tested and verified in GTKWave.
+
+Here,
+
+1. **$signal$45** represents x2 register which is SP (Stack Pointer)
+2. **$signal$51** represents x8 register which is s0 (Saved register 0)
+3. **$signal$58** represents x15 register which is a5 (function argument 5)
+
+ **Instruction-1:**
+ 
+ ```f9010113   addi	sp,sp,-112```
+ 
+ ![Screenshot from 2023-10-27 21-16-06](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/110ecd48-6f1b-4971-ac24-e1de69c3afff)
+
+ Here the instruction is **addi(add immediate)** i.e the default value of SP is FF (255 in decimal) it is added with -48(immediate decimal value) and again stored in SP which is 8F(143 in decimal).
+
+ **Instruction-2:**
+ 
+```c0300793   li	a5,-1021```
+
+![Screenshot from 2023-10-27 21-23-38](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/a42e11cf-1c36-4db0-b5f3-524dadbab82b)
+
+Here the instruction is **li(load immediate)** i.e the value -1021(immediate value FFFFFC03 in hexa) is loaded into the a5 register.
+
+**Instruction-3:**
+
+```0017f793    andi	a5,a5,1```
+
+![Screenshot from 2023-10-27 21-39-03](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/889cf176-22e7-41e5-8a3f-188f973bd626)
+
+Here the instruction is **andi(and immediate)** ,1 is the immediate value, and it is used as the other operand for the AND operation. The contents of "a5" will be bitwise ANDed with the immediate value 1 and again stored in a5.
+
+**Instruction-4:**
+
+```4017d793    srai	a5,a5,0x1```
+
+![Screenshot from 2023-10-27 21-37-29](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/b066ea17-bf26-41c2-8f92-6f8b4f6ac29e)
+
+Here the instruction is **srai(shift right arithmetic immediate)**,"a5" is the destination register where the result of the right shift operation will be stored.
+The second "a5" is the source register, indicating that you want to perform the right shift operation on the value in register "a5.""0x1" is the immediate value by which the value in register "a5" is right-shifted. In this case, you're right-shifting by 1 bit.The value in a5 register is 00000001 it is right shifted by 1 results in 00000000.
+ 
 
 ## Acknowledgement
 
