@@ -103,6 +103,15 @@ gcc automated_visitor_counter.c
 
 ![Screenshot from 2023-10-25 16-26-26](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/2b844fe0-a9b9-4752-8db0-01ba7a8db02d)
 
+## x30 Register GPIO Assignment 
+
+x30[0] = data read from IR sensor_1 (input)
+
+x30[1] = data read from IR sensor_2 (input)
+
+x30[9:2] = output to 8 LED's
+
+
 ## C Code
 
 ```
@@ -557,15 +566,15 @@ iverilog -o test processor.v testbench.v
 .\test
 gtkwave waveform.vcd
 ```
-#### Case-1
-
-    when the input is given as 2'b01 i.e sensor_1 = 0 (person is detected at sensor_1 while entering) and sensor_2 = 1 (person is not detected at sensor_2 while entering) the output value is zero which means the binary value of total people in the room displayed by the LED's is zero.In case there are some people intially inside the room the value of the total people remains constant for the given set of inputs .
-    
+### Case-1
+   
+ when the input is given as `2'b01` i.e ```sensor_1 = 0``` (person is detected at sensor_1 while entering) and ```sensor_2 = 1``` (person is not detected at sensor_2 while entering) the output value is zero which means the binary value of total people in the room displayed by the LED's is zero.In case there are some people intially inside the room the value of the total people remains constant for the given set of inputs. 
+ 
 ![Screenshot from 2023-10-27 21-03-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/921d8116-763b-427c-a9a0-f8854d926b64)
 
-#### Case-2
-
-    when the input is given as 2'b00 i.e sensor_1 = 0 (person is detected at sensor_1 while entering) and sensor_2 = 0 (person is detected at sensor_2 while entering) the output value i.e the total people value gets incremented when the people are entering one after the other and the binary value of the total people is displayed by the LED's ,when the total people inside the room reaches 255 the output(counter) starts to increment from zero again i.e the people inside the room are counted in sets of 255. 
+### Case-2
+     
+when the input is given as `2'b00` i.e ```sensor_1 = 0``` (person is detected at sensor_1 while entering) and ```sensor_2 = 0``` (person is detected at sensor_2 while entering) the output value i.e the total people value gets incremented when the people are entering one after the other and the binary value of the total people is displayed by the LED's ,when the total people inside the room reaches 255 the output(counter) starts to increment from zero again i.e the people inside the room are counted in sets of 255.
 
 ![Screenshot from 2023-10-27 21-10-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/51b01916-8939-4a3e-bad1-8f68b13da481)
 ![Screenshot from 2023-10-27 21-11-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fd3972ab-4211-4dc9-bca0-2b0a6f7de396)
@@ -580,7 +589,7 @@ Here,
 2. **$signal$51** represents x8 register which is s0 (Saved register 0)
 3. **$signal$58** represents x15 register which is a5 (function argument 5)
 
- **Instruction-1:**
+### Instruction-1:
  
  ```f9010113   addi	sp,sp,-112```
  
@@ -588,7 +597,7 @@ Here,
 
  Here the instruction is **addi(add immediate)** i.e the default value of SP is FF (255 in decimal) it is added with -48(immediate decimal value) and again stored in SP which is 8F(143 in decimal).
 
- **Instruction-2:**
+### Instruction-2:
  
 ```c0300793   li	a5,-1021```
 
@@ -596,7 +605,7 @@ Here,
 
 Here the instruction is **li(load immediate)** i.e the value -1021(immediate value FFFFFC03 in hexa) is loaded into the a5 register.
 
-**Instruction-3:**
+### Instruction-3:
 
 ```0017f793    andi	a5,a5,1```
 
@@ -604,7 +613,7 @@ Here the instruction is **li(load immediate)** i.e the value -1021(immediate val
 
 Here the instruction is **andi(and immediate)** ,1 is the immediate value, and it is used as the other operand for the AND operation. The contents of "a5" will be bitwise ANDed with the immediate value 1 and again stored in a5.
 
-**Instruction-4:**
+### Instruction-4:
 
 ```4017d793    srai	a5,a5,0x1```
 
@@ -621,7 +630,7 @@ The second "a5" is the source register, indicating that you want to perform the 
 - Kanish R,Colleague,IIIT B
 - Emil Jayanth Lal, Colleague, IIITB
 - Shant Rakshit, Colleague, IIITB
-- Mayank Kabra , IIIT B
+- Mayank Kabra, iMtech, IIIT B
 - skywater Foundry
 - chatgpt
 
@@ -633,7 +642,8 @@ The second "a5" is the source register, indicating that you want to perform the 
 - https://github.com/SakethGajawada/RISCV-GNU
 - https://github.com/The-OpenROAD-Project/OpenSTA.git
 - https://github.com/bhargav-vlsi
-- https://how2electronics.com/bidirectional-visitor-counter-with-automatic-light-control-using-arduino 
+- https://how2electronics.com/bidirectional-visitor-counter-with-automatic-light-control-using-arduino
+- https://en.wikichip.org/wiki/risc-v/registers 
 
 
 
