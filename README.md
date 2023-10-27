@@ -209,7 +209,7 @@ int main() {
 
             
                 // Add a delay here (replace with your delay logic)
-                for (int i = 0; i < 1; i++) 
+                for (int i = 0; i < 100; i++) 
                 {
                         // Adjust the loop count based on your processor's speed
                     
@@ -332,7 +332,7 @@ int main() {
 
             
                 // Add a delay here (replace with your delay logic)
-                /*for (int i = 0; i < 1; i++) {
+                /*for (int i = 0; i < 100; i++) {
                    // Adjust the loop count based on your processor's speed  
                 }*/
             }
