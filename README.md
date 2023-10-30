@@ -572,12 +572,18 @@ gtkwave waveform.vcd
  
 ![Screenshot from 2023-10-27 21-03-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/921d8116-763b-427c-a9a0-f8854d926b64)
 
+![Screenshot from 2023-10-30 10-50-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c9ad7689-1616-404c-9bf8-c9c108a8c47f)
+
 ### Case-2
      
 when the input is given as `2'b00` i.e ```sensor_1 = 0``` (person is detected at sensor_1 while entering) and ```sensor_2 = 0``` (person is detected at sensor_2 while entering) the output value i.e the total people value gets incremented when the people are entering one after the other and the binary value of the total people is displayed by the LED's ,when the total people inside the room reaches 255 the output(counter) starts to increment from zero again i.e the people inside the room are counted in sets of 255.
 
+![Screenshot from 2023-10-30 10-43-57](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/f548a1d4-a309-462e-a09a-ae6bd0ca870a)
+![Screenshot from 2023-10-30 10-47-35](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/6275f0c6-ec02-4c98-8498-9051a8d406b1)
+
 ![Screenshot from 2023-10-27 21-10-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/51b01916-8939-4a3e-bad1-8f68b13da481)
 ![Screenshot from 2023-10-27 21-11-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fd3972ab-4211-4dc9-bca0-2b0a6f7de396)
+
 
 ## Instruction Verification
 
