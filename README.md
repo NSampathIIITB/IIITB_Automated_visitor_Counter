@@ -572,17 +572,32 @@ gtkwave waveform.vcd
  
 ![Screenshot from 2023-10-27 21-03-19](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/921d8116-763b-427c-a9a0-f8854d926b64)
 
-![Screenshot from 2023-10-30 10-50-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c9ad7689-1616-404c-9bf8-c9c108a8c47f)
+![Screenshot from 2023-10-31 20-41-41](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/d6e5418d-0d98-43ea-a84e-76ad5a6eb480)
 
 ### Case-2
      
 when the input is given as `2'b00` i.e ```sensor_1 = 0``` (person is detected at sensor_1 while entering) and ```sensor_2 = 0``` (person is detected at sensor_2 while entering) the output value i.e the total people value gets incremented when the people are entering one after the other and the binary value of the total people is displayed by the LED's ,when the total people inside the room reaches 255 the output(counter) starts to increment from zero again i.e the people inside the room are counted in sets of 255.
 
-![Screenshot from 2023-10-30 10-43-57](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/f548a1d4-a309-462e-a09a-ae6bd0ca870a)
-![Screenshot from 2023-10-30 10-47-35](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/6275f0c6-ec02-4c98-8498-9051a8d406b1)
+**In the below waveforms we can clearly obsereve that the outputs are generated according to our logic or functionallity**
 
 ![Screenshot from 2023-10-27 21-10-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/51b01916-8939-4a3e-bad1-8f68b13da481)
 ![Screenshot from 2023-10-27 21-11-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fd3972ab-4211-4dc9-bca0-2b0a6f7de396)
+
+**In these two waveforms we can obsereve the masking**
+
+![Screenshot from 2023-10-30 10-43-57](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/f548a1d4-a309-462e-a09a-ae6bd0ca870a)
+![Screenshot from 2023-10-30 10-47-35](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/6275f0c6-ec02-4c98-8498-9051a8d406b1)
+
+In the below waveform we can observe the first output ***01*** is coming after the instruction ***00ff6f33 or	t5,t5,a5***
+![Screenshot from 2023-10-31 20-44-09](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/76e1269f-3ced-4a2b-82d4-80a059847274)
+
+In the below waveform we can observe the last output count value ***FF*** is coming after the instruction ***011f6f33 or	t5,t5,a7***
+![Screenshot from 2023-10-31 20-48-01](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/ef3fbab6-1959-44a4-add5-eab64cc15916)
+
+In the below waveform the instructions between the markers A and B depicts the delay which is `140sec` and according to my code these set of instructions will run in a loop for 100 times which gives us a total delay of `140000sec`
+
+![Screenshot from 2023-10-31 20-55-16](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/2c27cfd5-c6cf-4028-a853-d79ce02448fe)
+
 
 
 ## Instruction Verification
