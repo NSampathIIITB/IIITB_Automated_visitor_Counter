@@ -627,7 +627,69 @@ Here the instruction is **andi(and immediate)** ,1 is the immediate value, and i
 
 Here the instruction is **srai(shift right arithmetic immediate)**,"a5" is the destination register where the result of the right shift operation will be stored.
 The second "a5" is the source register, indicating that you want to perform the right shift operation on the value in register "a5.""0x1" is the immediate value by which the value in register "a5" is right-shifted. In this case, you're right-shifting by 1 bit.The value in a5 register is 00000001 it is right shifted by 1 results in 00000000.
- 
+
+
+## Gate Level Simulation
+
+Before doing Gate level simulation we need to convert our RTL design logic into Gate level Netlist ,this can be done by using a synthesis tool.
+
+Synthesis transforms the simple RTL design into a gate-level netlist with all the constraints as specified by the designer. In simple language, Synthesis is a process that converts the abstract form of design to a properly implemented chip in terms of logic gates.
+
+Synthesis takes place in multiple steps:
+
+1. Converting RTL into simple logic gates.
+2. Mapping those gates to actual technology-dependent logic gates available in the technology libraries.
+3. Optimizing the mapped netlist keeping the constraints set by the designer intact.
+
+Yosys is the tool we use to convert out RTL design code to netlist.
+
+
+After invoking the Yosys these are the commands we need to give for the generation of Gate level Netlist
+
+```
+ read_liberty -lib sky130_fd_sc_hd__tt_025C_1v80_256.lib
+ read_verilog processor.v
+ synth -top wrapper
+ dfflibmap -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib
+ abc -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib 
+ write_verilog synth_test.v
+ show wrapper
+
+```
+
+![Screenshot from 2023-10-30 21-37-33](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/0b11c725-8a19-4476-b41d-abbd2c1502dd)
+![Screenshot from 2023-10-30 21-41-03](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/fe03d13a-7c10-494f-b6c6-0174a485fa18)
+
+**Wrapper module after Netlist generation**
+
+![Screenshot from 2023-10-30 23-46-12](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/e62765d3-720f-48dc-b210-a31463b21d4b)
+
+
+***GLS*** is generating the simulation output by running test bench with netlist file generated from synthesis as Design under test. Netlist is logically same as RTL code, therefore, same test bench can be used for it.We perform this to verify logical functionality of the  RTL design after synthesizing it. Also ensuring the timing of the design is met.
+
+Following are the commands to run the GLS simulation:
+
+```
+iverilog -o test_new testbench.v synth_processor.v sky130_sram_1kbyte_1rw1r_32x256_8.v sky130_fd_sc_hd.v primitives.v
+
+```
+The gtkwave output for the netlist should match the output waveform for the RTL design file. As netlist and design code have same set of inputs and outputs, we can use the same testbench and compare the waveforms.
+
+The output waveforms of the synthesized Netlist for Case-1' and Case-2' are given below
+
+### Case-1' 
+
+The inputs here are given similar to the inputs given in Functional Verification using GTKWave simulation *Case-1* and the output we observed is also same as the output we got in *Case-1*
+
+![Screenshot from 2023-10-31 00-11-26](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/685b534a-f0bd-49db-91e5-dd11ebe7c2e8)
+
+### Case-2'
+
+The inputs here are given similar to the inputs given in Functional Verification using GTKWave simulation *Case-2* and the output we observed is also same as the output we got in *Case-2*
+
+![Screenshot from 2023-10-31 00-15-11](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/47c88707-28bd-43f9-a7dd-12aeb6d30b8f)
+![Screenshot from 2023-10-31 12-32-54](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/53900d39-4ea8-4923-b911-4d9ec20a18a0)
+
 
 ## Acknowledgement
 
@@ -647,7 +709,6 @@ The second "a5" is the source register, indicating that you want to perform the 
 - https://github.com/kunalg123/riscv_workshop_collaterals
 - https://github.com/SakethGajawada/RISCV-GNU
 - https://github.com/The-OpenROAD-Project/OpenSTA.git
-- https://github.com/bhargav-vlsi
 - https://how2electronics.com/bidirectional-visitor-counter-with-automatic-light-control-using-arduino
 - https://en.wikichip.org/wiki/risc-v/registers 
 
