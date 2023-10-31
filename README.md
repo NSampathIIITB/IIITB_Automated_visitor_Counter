@@ -725,7 +725,8 @@ The inputs here are given similar to the inputs given in Functional Verification
 - https://github.com/SakethGajawada/RISCV-GNU
 - https://github.com/The-OpenROAD-Project/OpenSTA.git
 - https://how2electronics.com/bidirectional-visitor-counter-with-automatic-light-control-using-arduino
-- https://en.wikichip.org/wiki/risc-v/registers 
+- https://en.wikichip.org/wiki/risc-v/registers
+- https://github.com/vinayrayapati/iiitb_rv32i 
 
 
 
