@@ -709,12 +709,11 @@ The inputs here are given similar to the inputs given in Functional Verification
 ## Acknowledgement
 
 - Kunal Ghosh, VSD Corp. Pvt. Ltd.
+- Mayank Kabra ,Founder, Chipcron Pvt. Ltd.
 - Alwin shaju,Colleague,IIIT B
 - Kanish R,Colleague,IIIT B
 - Emil Jayanth Lal, Colleague, IIITB
-- Shant Rakshit, Colleague, IIITB
-- Mayank Kabra, iMtech, IIIT B
-- skywater Foundry
+- Shant Rakshit, Colleague, IIITB 
 - chatgpt
 
 
