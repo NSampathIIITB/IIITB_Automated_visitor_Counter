@@ -594,7 +594,7 @@ In the below waveform we can observe the first output ***01*** is coming after t
 In the below waveform we can observe the last output count value ***FF*** is coming after the instruction ***011f6f33 or	t5,t5,a7***
 ![Screenshot from 2023-10-31 20-48-01](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/ef3fbab6-1959-44a4-add5-eab64cc15916)
 
-In the below waveform the instructions between the markers A and B depicts the delay which is `140sec` and according to my code these set of instructions will run in a loop for 100 times which gives us a total delay of `140000sec`
+In the below waveform the instructions between the markers A and B depicts the delay which is `140 units` and according to my code these set of instructions will run in a loop for 100 times which gives us a total delay of `140000 units`
 
 ![Screenshot from 2023-10-31 20-55-16](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/2c27cfd5-c6cf-4028-a853-d79ce02448fe)
 
