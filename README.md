@@ -705,6 +705,283 @@ The inputs here are given similar to the inputs given in Functional Verification
 ![Screenshot from 2023-10-31 00-15-11](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/47c88707-28bd-43f9-a7dd-12aeb6d30b8f)
 ![Screenshot from 2023-10-31 12-32-54](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/53900d39-4ea8-4923-b911-4d9ec20a18a0)
 
+## Physical Design Using OpenLane
+
+ **OVERVIEW OF PHYSICAL DESIGN**
+
+Place and Route (PnR) is the core of any ASIC implementation and Openlane flow integrates into it several key open source tools which perform each of the respective stages of PnR. Below are the stages and the respective tools that are called by openlane for the functionalities as described:
+
+![image](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/99fc97fa-08f2-4028-bf41-334717ac7bfa)
+
+- Synthesis
+  - Generating gate-level netlist ([yosys](https://github.com/YosysHQ/yosys)).
+  - Performing cell mapping ([abc](https://github.com/YosysHQ/yosys)).
+  - Performing pre-layout STA ([OpenSTA](https://github.com/The-OpenROAD-Project/OpenSTA)).
+- Floorplanning
+  - Defining the core area for the macro as well as the cell sites and the tracks ([init_fp](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/init_fp)).
+  - Placing the macro input and output ports ([ioplacer](https://github.com/The-OpenROAD-Project/ioPlacer/)).
+  - Generating the power distribution network ([pdn](https://github.com/The-OpenROAD-Project/pdn/)).
+- Placement
+  - Performing global placement ([RePLace](https://github.com/The-OpenROAD-Project/RePlAce)).
+  - Perfroming detailed placement to legalize the globally placed components ([OpenDP](https://github.com/The-OpenROAD-Project/OpenDP)).
+- Clock Tree Synthesis (CTS)
+  - Synthesizing the clock tree ([TritonCTS](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/TritonCTS)).
+- Routing
+  - Performing global routing to generate a guide file for the detailed router ([FastRoute](https://github.com/The-OpenROAD-Project/FastRoute/tree/openroad)).
+  - Performing detailed routing ([TritonRoute](https://github.com/The-OpenROAD-Project/TritonRoute))
+- GDSII Generation
+  - Streaming out the final GDSII layout file from the routed def ([Magic](https://github.com/RTimothyEdwards/magic)).
+
+ ### OpenLane
+
+   OpenLane is an automated RTL to GDSII flow based on several components including OpenROAD, Yosys, Magic, Netgen, CVC, SPEF-Extractor, CU-GR, Klayout and a number of custom scripts for design exploration and optimization. The flow performs full ASIC implementation steps from RTL all the way down to GDSII.
+   
+More about OpenLane at https://github.com/The-OpenROAD-Project/OpenLane
+
+###  Magic
+Magic is a venerable VLSI layout tool, written in the 1980's at Berkeley by John Ousterhout, now famous primarily for writing the scripting interpreter language Tcl. Due largely in part to its liberal Berkeley open-source license, magic has remained popular with universities and small companies. The open-source license has allowed VLSI engineers with a bent toward programming to implement clever ideas and help magic stay abreast of fabrication technology. However, it is the well thought-out core algorithms which lend to magic the greatest part of its popularity. Magic is widely cited as being the easiest tool to use for circuit layout, even for people who ultimately rely on commercial tools for their product design flow.
+
+More about magic at http://opencircuitdesign.com/magic/index.html
+
+## Generating the Layout / Preparing the Design
+
+ Preparing the design and including the lef files: The commands to prepare the design and overwite in a existing run folder the reports and results along with the command to include the lef files is given below:
+
+```
+sed -i's/max_transition   :0.04/max_transition   :0.75'*/*.lib
+```
+ 
+```
+cd OpenLane
+make mount
+./flow.tcl -interactive
+package require openlane 0.9
+prep -design AVC -verbose 99
+
+```
+![1](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/3e42b31c-c0c3-4d8a-8ea5-20437d36d17a)
+
+#### Synthesis
+
+Logic synthesis uses the RTL netlist to perform HDL technology mapping. The synthesis process is normally performed in two major steps:
+
+GTECH Mapping – Consists of mapping the HDL netlist to generic gates what are used to perform logical optimization based on AIGERs and other topologies created from the generic mapped netlist.
+
+Technology Mapping – Consists of mapping the post-optimized GTECH netlist to standard cells described in the PDK
+
+To synthesize the code run the following command
+
+```
+run_synthesis
+```
+![2](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/648512ad-9182-45ec-9d42-d820f618de54)
+
+***Statistics After Synthesis***
+
+![Screenshot from 2023-11-13 16-18-39](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/6428515b-c36a-4103-86a0-b07d68c8e99c)
+
+```
+Flop ratio = Number of D Flip flops = 1286  = 0.079638345
+             ______________________   _____
+             Total Number of cells    16148
+```
+***Post synthesis slack report***
+
+![Screenshot from 2023-11-13 16-26-47](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/54c6e9a6-148b-439a-8c22-42cdb69c3961)
+
+## Floorplanning
+
+The main objective is to plan the silicon area and create a robust power distribution network (PDN) to power each of the individual components of the synthesized netlist. In addition, macro placement and blockages must be defined before placement occurs to ensure a legalized GDS file. In power planning we create the ring which is connected to the pads which brings power around the edges of the chip. We also include power straps to bring power to the middle of the chip using higher metal layers which reduces IR drop and electro-migration problem.
+
+**Floorplan envrionment variables or switches:**
+
+ 1. ```FP_CORE_UTIL``` - floorplan core utilisation
+ 2. ```FP_ASPECT_RATIO``` - floorplan aspect ratio
+ 3. ```FP_CORE_MARGIN``` - Core to die margin area
+ 4. ```FP_IO_MODE``` - defines pin configurations (1 = equidistant/0 = not equidistant)
+ 5. ```FP_CORE_VMETAL``` - vertical metal layer
+ 6. ```FP_CORE_HMETAL``` - horizontal metal layer
+
+
+    ```Note: Usually, vertical metal layer and horizontal metal layer values will be 1 more than that specified in the file```
+       
+
+ To run the Floorplan use the command
+
+```
+run_floorplan
+```
+![3](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/427a96bb-d2aa-483d-a334-dca6e552a9d3)
+
+Post the floorplan run, a `.def` file will have been created within the `results/floorplan` directory. 
+        We may review floorplan files by checking the `floorplan.tcl`. 
+To view the floorplan: Magic is invoked after moving to the ```results/floorplan``` directory,then use the following command: 
+```
+magic -T /home/nsaisampath/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+      
+```
+![Screenshot from 2023-11-14 22-42-55](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/8a9d1746-7410-480e-bd8b-01a9198dc16c)
+ 
+**Core Area post floorplan:**  
+
+![Screenshot from 2023-11-13 16-21-44](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/dc128c5d-24d5-4061-a70c-d7f0164c17c2)
+
+**Die Area post floorplan:**
+
+![Screenshot from 2023-11-13 16-22-06](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/7186a8d8-dc44-45e0-8d47-a17069665c1d)
+
+## Placement
+
+Place the standard cells on the floorplane rows, aligned with sites defined in the technology lef file. Placement is done in two steps: Global and Detailed. In Global placement tries to find optimal position for all cells but they may be overlapping and not aligned to rows, detailed placement takes the global placement and legalizes all of the placements trying to adhere to what the global placement wants. The next step in the OpenLANE ASIC flow is placement. The synthesized netlist is to be placed on the floorplan. Placement is perfomed in 2 stages:
+
+Global Placement: It finds optimal position for all cells which may not be legal and cells may overlap. Optimization is done through reduction of half parameter wire length.
+
+Detailed Placement: It alters the position of cells post global placement so as to legalise them.
+
+To run the placement use the command
+```
+run_placement
+```
+![4](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/3cc1702b-200b-47d3-8252-e945fc1064f2)
+
+Post placement: the design can be viewed on magic within ```results/placement``` directory.
+Run the follwing command in that directory:
+```
+magic -T /home/nsaisampath/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+
+ ```
+![Screenshot from 2023-11-14 23-41-07](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/bf4e4216-4fa4-4657-854a-ea53abd435f2)
+
+***Post placement slack report***
+
+![Screenshot from 2023-11-13 16-25-15](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/0dc3ff4f-5cb1-47b7-85f0-381a7790fc7c)
+
+## CTS (Clock Tree Synthesis)
+
+The purpose of building a clock tree is enable the clock input to reach every element and to ensure a zero clock skew. H-tree is a common methodology followed in CTS.
+        Before attempting a CTS run in TritonCTS tool, if the slack was attempted to be reduced in previous run, the netlist may have gotten modified by cell replacement techniques. Therefore, the verilog file needs to be modified using the ```write_verilog``` command. Then, the synthesis, floorplan and placement is run again. 
+  To run CTS use the below command
+   ```
+  run_cts
+  ```
+ ![5](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/7a97fa51-43b2-4c43-9a28-65893a8ad17f)        
+
+***Post CTS Report***
+
+![Screenshot from 2023-11-13 16-35-17](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/909cb637-e374-43e6-9cbc-958ae4cedee7)
+
+          
+## Power Distribution Network Generation
+
+Unlike the general ASIC flow, Power Distribution Network generation is not a part of floorplan run in OpenLANE. PDN must be generated after CTS and post-CTS STA analyses:
+
+To run the pdn use the command
+
+```
+gen_pdn
+
+```        
+![6](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c143b787-e436-48e6-a72c-012c3971686c)
+
+## Routing
+
+ OpenLANE uses the TritonRoute tool for routing.
+ There are 2 stages of routing:
+        1. Global routing: Routing region is divided into rectangle grids which are represented as course 3D routes (Fastroute tool).
+        2. Detailed routing: Finer grids and routing guides used to implement physical wiring (TritonRoute tool).
+        
+  **2. Features of TritonRoute:**
+        1. Honouring pre-processed route guides
+        2. Assumes that each net satisfies inter guide connectivity
+        3. Uses MILP based panel routing scheme
+        4. Intra-layer parallel and inter-layer sequential routing framework
+        
+To run the routing use the command      
+ ```
+run_routing
+ ```
+
+![7](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/30d4fe8b-d74e-414d-b2d1-faff7dffb706)
+
+
+*Do know*  in routing stage<br>
+ 1. `run_routing` - To start the routing
+ 2. The options for routing can be set in the `config.tcl` file. 
+ 3. The optimisations in routing can also be done by specifying the routing strategy to use different version of `TritonRoute Engine`. There is a trade0ff between the optimised route 
+    and the runtime for routing.
+ 4. The routing stage must have the `CURRENT_DEF` set to `pdn.def`.
+ 5. The two stages of routing are performed by the following engines:
+              - Global Route   : Fast Route
+              - Detailed Route : Triton Route
+ 6. Fast Route generates the routing guides, whereas Triton Route uses the Global Route and then completes the routing with some strategies and optimisations for finding the best possible path connect the pins.the design can be viewed on magic within ```results/routing``` directory.
+         
+    Run the follwing command in that directory:
+
+    ```
+     magic -T /home/nsaisampath/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+    ```
+![routing](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/737478be-0165-4bc3-9d9a-d6919e9da83c)
+
+![Screenshot from 2023-11-13 17-01-12](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/5f057d6c-9839-4739-816f-475b8725747e)
+
+***Post Routing Reports***
+
+![Screenshot from 2023-11-13 16-38-07](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/41824782-4c30-4df9-b3aa-5cb8d77bd88c)
+
+![Screenshot from 2023-11-13 16-39-56](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/c3a634b7-2a5d-4f34-aff2-cd9cfffca18a)
+
+ ***Area of Design***
+ 
+ ![Screenshot from 2023-11-15 00-16-05](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/3603deb9-5381-4389-9b85-c55bee0ba146)
+
+### Performance calculation
+
+  ```  
+                                                    1
+Maximum Possible Operating Frequency = -----------------------------
+	                                       Clock period - Setup Slack                                                  
+  
+					  
+					                 1
+				      = ---------------------  
+				            40ns - 10.24ns
+				            
+				      = 0.0336GHz                              
+   
+   ```
+### Steps after routing
+```
+run_magic
+run_magic_spice_export
+run_magic_drc
+run_antenna_check
+```
+![8](https://github.com/NSampathIIITB/IIITB_Automated_visitor_Counter/assets/141038460/172ac58c-1203-48a2-bd6f-a82e2040bb75)
+
+## Openlane Interactive flow:
+
+```
+cd OpenLane
+
+./flow.tcl -interactive
+package require openlane 0.9
+prep -design AVC
+run_synthesis
+run_floorplan
+run_placement
+run_cts
+gen_pdn
+run_routing
+
+```
+## OpenLANE non-interactive flow
+
+```
+cd OpenLane 
+make mount
+./flow.tcl -design AVC
+
+```
 
 ## Acknowledgement
 
