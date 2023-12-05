@@ -74,7 +74,7 @@ The variable resistor used here is preset. It is used to calibrate the distance 
 
 ## Working
 
-First of all, we need to set one IR sensor (IR sensor-1) at the entry gate and another one (IR sensor-2) set at the exit gate. Normally when IR sensors do not detect any obstacle, it produces a HIGH (1) output value from the Output Pin.
+First of all, we need to set one IR sensor (IR sensor-1) at the entry of the gate and another one (IR sensor-2) set at feew feet apart from the first at the other side of the gate . Normally when IR sensors do not detect any obstacle, it produces a HIGH (1) output value from the Output Pin.
 
 When a visitor enters through the entry gate the IR sensor-1 detects the visitor (obstacle) and produces a Low (0) output value from the Output Pin.Then the processor read this value and counts 1+ using the code. Similarly, When the IR sensor-1 detects another visitor (obstacle), the processor increment the counting by 1+. In this way every time the processor adds +1 in the count when a visitor passes through this gate and calculates the total number of entering visitors.
 
