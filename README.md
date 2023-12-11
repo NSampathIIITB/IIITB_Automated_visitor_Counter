@@ -946,7 +946,7 @@ Maximum Possible Operating Frequency = -----------------------------
 				      = ---------------------  
 				            40ns - 10.24ns
 				            
-				      = 0.0336GHz                              
+				      = 33.6 MHz                              
    
    ```
 ### Steps after routing
